@@ -1,5 +1,32 @@
 @import "tailwindcss";
 
+@keyframes fade-in {
+  from { opacity: 0; transform: translateY(6px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@utility animate-fade-in {
+  animation: fade-in 0.4s ease-out forwards;
+}
+
+@keyframes modal-backdrop-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@utility animate-backdrop-in {
+  animation: modal-backdrop-in 0.25s ease-out forwards;
+}
+
+@keyframes modal-panel-in {
+  from { opacity: 0; transform: translateY(24px) scale(0.96); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+@utility animate-panel-in {
+  animation: modal-panel-in 0.45s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+
 :root {
   --background: #ffffff;
   --foreground: #171717;
