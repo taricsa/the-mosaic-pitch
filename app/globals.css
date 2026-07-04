@@ -27,9 +27,18 @@
   animation: modal-panel-in 0.45s cubic-bezier(0.22, 1, 0.36, 1) forwards;
 }
 
+@keyframes maple-float {
+  0%, 100% { transform: translateY(0) rotate(-6deg); opacity: 1; }
+  50% { transform: translateY(-6px) rotate(6deg); opacity: 0.85; }
+}
+
+@utility animate-maple-float {
+  animation: maple-float 3s ease-in-out infinite;
+}
+
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --background: #09090b;
+  --foreground: #fafafa;
 }
 
 @theme inline {
@@ -37,17 +46,4 @@
   --color-foreground: var(--foreground);
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
-}
-
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
 }
