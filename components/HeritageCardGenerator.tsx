@@ -7,8 +7,7 @@ import { getHeritageFlag } from "@/lib/heritage-flags";
 const SHARE_URL = "https://themosaicpitch.vercel.app";
 const CARD_WIDTH = 360;
 const CARD_HEIGHT = 450;
-const EXPORT_WIDTH = 1080;
-const EXPORT_HEIGHT = 1350;
+const EXPORT_SCALE = 3; // 360×3 = 1080px wide, 450×3 = 1350px tall (4:5)
 
 function formatSurname(value: string) {
   return value.trim().toUpperCase();
@@ -64,16 +63,8 @@ export default function HeritageCardGenerator() {
     try {
       const dataUrl = await toPng(node, {
         cacheBust: true,
-        width: EXPORT_WIDTH,
-        height: EXPORT_HEIGHT,
-        pixelRatio: 1,
+        pixelRatio: EXPORT_SCALE,
         backgroundColor: "#1A1A1A",
-        style: {
-          width: `${CARD_WIDTH}px`,
-          height: `${CARD_HEIGHT}px`,
-          margin: "0",
-          transform: "none",
-        },
       });
       const link = document.createElement("a");
       link.download = `${displaySurname.toLowerCase()}-mosaic-tile.png`;
