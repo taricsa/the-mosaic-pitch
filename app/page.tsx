@@ -1,4 +1,5 @@
 import FandomQuiz from "@/components/FandomQuiz";
+import HeritageCardGenerator from "@/components/HeritageCardGenerator";
 import NeighborhoodCounter from "@/components/NeighborhoodCounter";
 import RosterMosaic from "@/components/RosterMosaic";
 
@@ -150,6 +151,7 @@ export default function Home() {
           <RosterMosaic />
         </div>
         <FandomQuiz />
+        <HeritageCardGenerator />
       </main>
 
       {/* Footer */}
