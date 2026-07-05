@@ -75,13 +75,13 @@ export default function HeritageCardGenerator() {
   return (
     <section
       id="heritage-card-generator"
-      className="relative w-full overflow-hidden bg-[#FAFAFA] px-6 py-20 text-[#1A1A1A] sm:px-10 lg:px-16"
+      className="relative w-full overflow-hidden border-y border-zinc-800/80 bg-zinc-900 px-6 py-20 text-zinc-50 sm:px-10 lg:px-16"
     >
       <div
         className="pointer-events-none absolute inset-0 opacity-60"
         style={{
           backgroundImage:
-            "radial-gradient(circle at 15% 20%, rgba(197,32,44,0.08), transparent 45%), radial-gradient(circle at 85% 80%, rgba(201,162,39,0.1), transparent 50%)",
+            "radial-gradient(circle at 15% 20%, rgba(197,32,44,0.15), transparent 45%), radial-gradient(circle at 85% 80%, rgba(201,162,39,0.08), transparent 50%)",
         }}
         aria-hidden
       />
@@ -91,17 +91,17 @@ export default function HeritageCardGenerator() {
           <p className="mb-4 inline-block rounded-full border border-[#C9A227]/50 bg-[#1A1A1A]/5 px-4 py-1 text-xs font-semibold uppercase tracking-[0.25em] text-[#C5202C]">
             Share the Mosaic
           </p>
-          <h2 className="text-balance text-3xl font-black leading-tight tracking-tight text-[#1A1A1A] sm:text-4xl">
+          <h2 className="text-balance text-3xl font-black leading-tight tracking-tight text-zinc-50 sm:text-4xl">
             Affix Your Tile to the Canadian Mosaic
           </h2>
-          <p className="mx-auto mt-5 max-w-lg text-pretty text-base leading-relaxed text-[#1A1A1A]/60">
+          <p className="mx-auto mt-5 max-w-lg text-pretty text-base leading-relaxed text-zinc-400">
             Claim your family&apos;s place in the story. Generate a shareable
             tile and invite others to stand behind the Maple Leaf.
           </p>
         </header>
 
         <form
-          className="mt-12 animate-fade-in space-y-5 rounded-3xl border-2 border-[#C9A227]/40 bg-white p-8 shadow-xl shadow-black/5 sm:p-10"
+          className="mt-12 animate-fade-in space-y-5 rounded-3xl border border-zinc-800 bg-zinc-950/60 p-8 shadow-xl shadow-black/20 sm:p-10"
           onSubmit={(e) => {
             e.preventDefault();
             handleGenerate();
@@ -110,7 +110,7 @@ export default function HeritageCardGenerator() {
           <div>
             <label
               htmlFor="heritage-surname"
-              className="block text-sm font-semibold text-[#1A1A1A]"
+              className="block text-sm font-semibold text-zinc-300"
             >
               Your Name or Family Surname
             </label>
@@ -123,14 +123,14 @@ export default function HeritageCardGenerator() {
                 setGenerated(false);
               }}
               placeholder="e.g., Nguyen, O'Brien, Singh"
-              className="mt-2 w-full rounded-xl border-2 border-[#1A1A1A]/10 bg-[#FAFAFA] px-4 py-3 text-[#1A1A1A] placeholder:text-[#1A1A1A]/30 transition-colors focus:border-[#C5202C] focus:outline-none focus:ring-2 focus:ring-[#C5202C]/20"
+              className="mt-2 w-full rounded-xl border border-zinc-800 bg-zinc-950 px-4 py-3 text-white placeholder:text-zinc-600 transition-colors focus:border-[#C5202C] focus:outline-none focus:ring-2 focus:ring-[#C5202C]/20"
             />
           </div>
 
           <div>
             <label
               htmlFor="heritage-origins"
-              className="block text-sm font-semibold text-[#1A1A1A]"
+              className="block text-sm font-semibold text-zinc-300"
             >
               Sovereign Heritage / Ancestral Origins
             </label>
@@ -143,7 +143,7 @@ export default function HeritageCardGenerator() {
                 setGenerated(false);
               }}
               placeholder="e.g., Italy, Nigeria, Philippines, Punjab"
-              className="mt-2 w-full rounded-xl border-2 border-[#1A1A1A]/10 bg-[#FAFAFA] px-4 py-3 text-[#1A1A1A] placeholder:text-[#1A1A1A]/30 transition-colors focus:border-[#C5202C] focus:outline-none focus:ring-2 focus:ring-[#C5202C]/20"
+              className="mt-2 w-full rounded-xl border border-zinc-800 bg-zinc-950 px-4 py-3 text-white placeholder:text-zinc-600 transition-colors focus:border-[#C5202C] focus:outline-none focus:ring-2 focus:ring-[#C5202C]/20"
             />
           </div>
 
@@ -238,7 +238,7 @@ export default function HeritageCardGenerator() {
               >
                 {copied ? "Copied to clipboard!" : "Copy Share Link"}
               </button>
-              <p className="max-w-sm text-center text-xs leading-relaxed text-[#1A1A1A]/50">
+              <p className="max-w-sm text-center text-xs leading-relaxed text-zinc-500">
                 Download the 4:5 tile for Instagram, or copy the link to invite
                 friends and family.
               </p>
