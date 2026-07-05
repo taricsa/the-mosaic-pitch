@@ -6,76 +6,58 @@ export type Fixture = {
   away: string;
   league: "CPL" | "MLS";
   venue: string;
+  note?: string;
 };
 
-/** Upcoming fixtures for Canadian CPL & MLS clubs (2026 season sample). */
+/** FIFA World Cup 2026 runs June 11 – July 19 across North America. */
+export const WORLD_CUP_START = "2026-06-11";
+export const WORLD_CUP_END = "2026-07-19";
+
+/** MLS pauses May 25 – July 16 for the World Cup (mlssoccer.com). */
+export const MLS_PAUSE_UNTIL = "2026-07-16";
+
+/** CPL pauses June 11 – June 26, then resumes during the World Cup (cplsoccer.com). */
+export const CPL_PAUSE_START = "2026-06-11";
+export const CPL_PAUSE_END = "2026-06-26";
+
+/**
+ * Verified fixtures only — sourced from CPL/MLS 2026 schedule announcements.
+ * Do not add placeholder matches during league pauses.
+ */
 export const UPCOMING_FIXTURES: Fixture[] = [
   {
-    id: "cpl-1",
-    date: "2026-07-05",
-    time: "16:00 ET",
-    home: "Forge FC",
-    away: "York United FC",
-    league: "CPL",
-    venue: "Tim Hortons Field, Hamilton",
-  },
-  {
-    id: "cpl-2",
-    date: "2026-07-05",
+    id: "cpl-july-4",
+    date: "2026-07-04",
     time: "19:00 ET",
     home: "Atlético Ottawa",
-    away: "Valour FC",
+    away: "Cavalry FC",
     league: "CPL",
     venue: "TD Place, Ottawa",
+    note: "2025 CPL Final rematch — Nathan Ingham returns to Ottawa.",
   },
   {
-    id: "mls-1",
-    date: "2026-07-05",
+    id: "mls-july-16-mtl",
+    date: "2026-07-16",
     time: "19:30 ET",
-    home: "Toronto FC",
-    away: "New York City FC",
+    home: "CF Montréal",
+    away: "Toronto FC",
     league: "MLS",
-    venue: "BMO Field, Toronto",
+    venue: "Stade Saputo, Montréal",
+    note: "MLS returns from World Cup break — 100% Canadian clash.",
   },
   {
-    id: "cpl-3",
-    date: "2026-07-06",
-    time: "19:00 MT",
-    home: "Cavalry FC",
-    away: "FC Edmonton",
-    league: "CPL",
-    venue: "ATCO Field, Calgary",
-  },
-  {
-    id: "mls-2",
-    date: "2026-07-06",
-    time: "22:00 ET",
-    home: "Vancouver Whitecaps FC",
-    away: "LA Galaxy",
+    id: "mls-july-16-van",
+    date: "2026-07-16",
+    time: "17:30 PT",
+    home: "Chicago Fire FC",
+    away: "Vancouver Whitecaps FC",
     league: "MLS",
-    venue: "BC Place, Vancouver",
+    venue: "Soldier Field, Chicago",
+    note: "Whitecaps return from World Cup break on the road.",
   },
   {
-    id: "cpl-4",
-    date: "2026-07-08",
-    time: "19:00 ET",
-    home: "Halifax Wanderers FC",
-    away: "Pacific FC",
-    league: "CPL",
-    venue: "Wanderers Grounds, Halifax",
-  },
-  {
-    id: "cpl-5",
-    date: "2026-07-09",
-    time: "19:00 PT",
-    home: "Vancouver FC",
-    away: "Forge FC",
-    league: "CPL",
-    venue: "Willoughby Community Park, Langley",
-  },
-  {
-    id: "mls-3",
-    date: "2026-07-11",
+    id: "mls-july-25-mtl",
+    date: "2026-07-25",
     time: "19:30 ET",
     home: "CF Montréal",
     away: "Inter Miami CF",
@@ -83,157 +65,33 @@ export const UPCOMING_FIXTURES: Fixture[] = [
     venue: "Stade Saputo, Montréal",
   },
   {
-    id: "cpl-6",
-    date: "2026-07-12",
-    time: "16:00 ET",
-    home: "York United FC",
-    away: "Cavalry FC",
-    league: "CPL",
-    venue: "York Stadium, Toronto",
-  },
-  {
-    id: "cpl-7",
-    date: "2026-07-12",
-    time: "19:00 ET",
-    home: "Valour FC",
-    away: "Atlético Ottawa",
-    league: "CPL",
-    venue: "Princess Auto Stadium, Winnipeg",
-  },
-  {
-    id: "mls-4",
-    date: "2026-07-12",
-    time: "19:30 ET",
-    home: "Toronto FC",
-    away: "Columbus Crew",
-    league: "MLS",
-    venue: "BMO Field, Toronto",
-  },
-  {
-    id: "cpl-8",
-    date: "2026-07-13",
-    time: "19:00 MT",
-    home: "FC Edmonton",
-    away: "Pacific FC",
-    league: "CPL",
-    venue: "Clarke Stadium, Edmonton",
-  },
-  {
-    id: "mls-5",
-    date: "2026-07-13",
-    time: "22:00 ET",
-    home: "Vancouver Whitecaps FC",
-    away: "Seattle Sounders FC",
-    league: "MLS",
-    venue: "BC Place, Vancouver",
-  },
-  {
-    id: "cpl-9",
-    date: "2026-07-15",
-    time: "19:00 ET",
-    home: "Forge FC",
-    away: "Halifax Wanderers FC",
-    league: "CPL",
-    venue: "Tim Hortons Field, Hamilton",
-  },
-  {
-    id: "cpl-10",
-    date: "2026-07-16",
-    time: "19:00 PT",
-    home: "Pacific FC",
-    away: "Vancouver FC",
-    league: "CPL",
-    venue: "Starlight Stadium, Langford",
-  },
-  {
-    id: "mls-6",
-    date: "2026-07-18",
-    time: "19:30 ET",
-    home: "CF Montréal",
-    away: "Toronto FC",
-    league: "MLS",
-    venue: "Stade Saputo, Montréal",
-  },
-  {
-    id: "cpl-11",
-    date: "2026-07-19",
-    time: "16:00 ET",
-    home: "Atlético Ottawa",
-    away: "Forge FC",
-    league: "CPL",
-    venue: "TD Place, Ottawa",
-  },
-  {
-    id: "cpl-12",
-    date: "2026-07-19",
-    time: "19:00 ET",
-    home: "York United FC",
-    away: "Halifax Wanderers FC",
-    league: "CPL",
-    venue: "York Stadium, Toronto",
-  },
-  {
-    id: "mls-7",
-    date: "2026-07-19",
-    time: "22:00 ET",
-    home: "Vancouver Whitecaps FC",
-    away: "Portland Timbers",
-    league: "MLS",
-    venue: "BC Place, Vancouver",
-  },
-  {
-    id: "cpl-13",
-    date: "2026-07-20",
-    time: "19:00 MT",
-    home: "Cavalry FC",
-    away: "Vancouver FC",
-    league: "CPL",
-    venue: "ATCO Field, Calgary",
-  },
-  {
-    id: "cpl-14",
-    date: "2026-07-22",
-    time: "19:00 ET",
-    home: "Valour FC",
-    away: "FC Edmonton",
-    league: "CPL",
-    venue: "Princess Auto Stadium, Winnipeg",
-  },
-  {
-    id: "mls-8",
+    id: "mls-july-25-van",
     date: "2026-07-25",
+    time: "17:30 PT",
+    home: "Minnesota United FC",
+    away: "Vancouver Whitecaps FC",
+    league: "MLS",
+    venue: "Allianz Field, Saint Paul",
+  },
+  {
+    id: "mls-oct-10-tor",
+    date: "2026-10-10",
     time: "19:30 ET",
     home: "Toronto FC",
     away: "CF Montréal",
     league: "MLS",
     venue: "BMO Field, Toronto",
+    note: "Canadian Classique — second meeting of the season.",
   },
   {
-    id: "cpl-15",
-    date: "2026-07-26",
-    time: "16:00 ET",
-    home: "Halifax Wanderers FC",
-    away: "Cavalry FC",
-    league: "CPL",
-    venue: "Wanderers Grounds, Halifax",
-  },
-  {
-    id: "cpl-16",
-    date: "2026-07-26",
-    time: "19:00 PT",
-    home: "Pacific FC",
-    away: "Atlético Ottawa",
-    league: "CPL",
-    venue: "Starlight Stadium, Langford",
-  },
-  {
-    id: "mls-9",
-    date: "2026-07-26",
-    time: "22:00 ET",
-    home: "Vancouver Whitecaps FC",
-    away: "Minnesota United FC",
+    id: "mls-nov-7-van",
+    date: "2026-11-07",
+    time: "13:00 ET",
+    home: "CF Montréal",
+    away: "Vancouver Whitecaps FC",
     league: "MLS",
-    venue: "BC Place, Vancouver",
+    venue: "Stade Saputo, Montréal",
+    note: "Decision Day — final matchday of the 2026 MLS regular season.",
   },
 ];
 
@@ -244,4 +102,16 @@ export function formatFixtureDate(isoDate: string): string {
     month: "short",
     day: "numeric",
   });
+}
+
+export function isMlsPausedOn(date: string): boolean {
+  return date < MLS_PAUSE_UNTIL;
+}
+
+export function isCplPausedOn(date: string): boolean {
+  return date >= CPL_PAUSE_START && date <= CPL_PAUSE_END;
+}
+
+export function isDuringWorldCup(date: string): boolean {
+  return date >= WORLD_CUP_START && date <= WORLD_CUP_END;
 }

@@ -6,20 +6,31 @@ import {
   MLS_SCHEDULE_URL,
 } from "@/lib/canadian-clubs";
 import {
+  CPL_PAUSE_END,
+  CPL_PAUSE_START,
   formatFixtureDate,
+  isDuringWorldCup,
+  isMlsPausedOn,
+  MLS_PAUSE_UNTIL,
   UPCOMING_FIXTURES,
+  WORLD_CUP_END,
+  WORLD_CUP_START,
   type Fixture,
 } from "@/lib/fixtures";
 
 type LeagueFilter = "all" | "CPL" | "MLS";
 
+const TODAY = "2026-07-04";
+
 export default function MatchCalendar() {
   const [filter, setFilter] = useState<LeagueFilter>("all");
+  const inWorldCupWindow = isDuringWorldCup(TODAY);
 
   const fixtures = useMemo(() => {
-    const sorted = [...UPCOMING_FIXTURES].sort((a, b) =>
-      a.date.localeCompare(b.date),
-    );
+    const sorted = [...UPCOMING_FIXTURES]
+      .filter((f) => f.date >= TODAY)
+      .sort((a, b) => a.date.localeCompare(b.date));
+
     if (filter === "all") return sorted;
     return sorted.filter((f) => f.league === filter);
   }, [filter]);
@@ -52,10 +63,38 @@ export default function MatchCalendar() {
             Match Calendar
           </h2>
           <p className="mx-auto mt-4 max-w-xl text-sm leading-relaxed text-zinc-400 sm:text-base">
-            Every upcoming CPL and MLS fixture involving a Canadian club. Plan
-            your matchday and keep the domestic game growing.
+            Verified upcoming fixtures for Canadian CPL and MLS clubs — adjusted
+            for the 2026 World Cup schedule breaks.
           </p>
         </header>
+
+        {inWorldCupWindow && (
+          <div
+            className="mt-8 rounded-2xl border border-[#C9A227]/30 bg-zinc-900/80 p-6 text-left"
+            role="status"
+          >
+            <p className="text-xs font-bold uppercase tracking-[0.2em] text-[#C9A227]">
+              🏆 World Cup in progress · {WORLD_CUP_START} – {WORLD_CUP_END}
+            </p>
+            <ul className="mt-4 space-y-3 text-sm leading-relaxed text-zinc-300">
+              <li>
+                <span className="font-bold text-[#C9A227]">MLS</span> — League
+                play is paused until{" "}
+                <span className="font-semibold text-zinc-50">
+                  {formatFixtureDate(MLS_PAUSE_UNTIL)}
+                </span>
+                . Canadian clubs return July 16 (Montréal vs Toronto, Whitecaps
+                at Chicago).
+              </li>
+              <li>
+                <span className="font-bold text-[#C5202C]">CPL</span> — Paused{" "}
+                {formatFixtureDate(CPL_PAUSE_START)} –{" "}
+                {formatFixtureDate(CPL_PAUSE_END)}, then resumed. One confirmed
+                match today: Atlético Ottawa vs Cavalry FC.
+              </li>
+            </ul>
+          </div>
+        )}
 
         <div
           className="mt-8 flex flex-wrap items-center justify-center gap-2"
@@ -80,45 +119,81 @@ export default function MatchCalendar() {
           ))}
         </div>
 
+        {filter !== "all" && isMlsPausedOn(TODAY) && filter === "MLS" && (
+          <p className="mt-8 rounded-2xl border border-zinc-800 bg-zinc-900/60 px-5 py-4 text-center text-sm text-zinc-400">
+            No MLS matches until{" "}
+            <span className="font-semibold text-zinc-200">
+              {formatFixtureDate(MLS_PAUSE_UNTIL)}
+            </span>{" "}
+            — the league is on World Cup break.
+          </p>
+        )}
+
         <div className="mt-10 space-y-8">
-          {grouped.map(([date, dayFixtures]) => (
-            <div key={date}>
-              <h3 className="mb-4 text-sm font-bold uppercase tracking-widest text-[#C9A227]">
-                {formatFixtureDate(date)}
-              </h3>
-              <ul className="space-y-3">
-                {dayFixtures.map((fixture) => (
-                  <li
-                    key={fixture.id}
-                    className="flex flex-col gap-3 rounded-2xl border border-zinc-800 bg-zinc-900/60 px-5 py-4 sm:flex-row sm:items-center sm:justify-between"
-                  >
-                    <div className="flex items-center gap-3">
-                      <span
-                        className={`shrink-0 rounded-full px-2.5 py-0.5 text-[10px] font-bold uppercase tracking-wider ${
-                          fixture.league === "CPL"
-                            ? "bg-[#C5202C]/20 text-[#C5202C]"
-                            : "bg-[#C9A227]/20 text-[#C9A227]"
-                        }`}
-                      >
-                        {fixture.league}
-                      </span>
-                      <p className="font-bold text-zinc-100">
-                        {fixture.home}{" "}
-                        <span className="font-normal text-zinc-500">vs</span>{" "}
-                        {fixture.away}
-                      </p>
-                    </div>
-                    <div className="flex flex-col gap-0.5 text-sm text-zinc-500 sm:text-right">
-                      <span className="font-mono font-semibold text-zinc-300">
-                        {fixture.time}
-                      </span>
-                      <span className="text-xs">{fixture.venue}</span>
-                    </div>
-                  </li>
-                ))}
-              </ul>
-            </div>
-          ))}
+          {grouped.length === 0 ? (
+            <p className="rounded-2xl border border-zinc-800 bg-zinc-900/60 px-5 py-8 text-center text-sm text-zinc-400">
+              No verified fixtures in this filter right now. Check the official
+              league schedules below for the full calendar.
+            </p>
+          ) : (
+            grouped.map(([date, dayFixtures]) => (
+              <div key={date}>
+                <h3 className="mb-4 flex flex-wrap items-center gap-2 text-sm font-bold uppercase tracking-widest text-[#C9A227]">
+                  {formatFixtureDate(date)}
+                  {date === TODAY && (
+                    <span className="rounded-full bg-[#C5202C]/20 px-2 py-0.5 text-[10px] normal-case tracking-normal text-[#C5202C]">
+                      Today
+                    </span>
+                  )}
+                  {isMlsPausedOn(date) && (
+                    <span className="rounded-full bg-zinc-800 px-2 py-0.5 text-[10px] font-medium normal-case tracking-normal text-zinc-500">
+                      MLS on break
+                    </span>
+                  )}
+                </h3>
+                <ul className="space-y-3">
+                  {dayFixtures.map((fixture) => (
+                    <li
+                      key={fixture.id}
+                      className="flex flex-col gap-3 rounded-2xl border border-zinc-800 bg-zinc-900/60 px-5 py-4 sm:flex-row sm:items-center sm:justify-between"
+                    >
+                      <div>
+                        <div className="flex items-center gap-3">
+                          <span
+                            className={`shrink-0 rounded-full px-2.5 py-0.5 text-[10px] font-bold uppercase tracking-wider ${
+                              fixture.league === "CPL"
+                                ? "bg-[#C5202C]/20 text-[#C5202C]"
+                                : "bg-[#C9A227]/20 text-[#C9A227]"
+                            }`}
+                          >
+                            {fixture.league}
+                          </span>
+                          <p className="font-bold text-zinc-100">
+                            {fixture.home}{" "}
+                            <span className="font-normal text-zinc-500">
+                              vs
+                            </span>{" "}
+                            {fixture.away}
+                          </p>
+                        </div>
+                        {fixture.note && (
+                          <p className="mt-2 text-xs leading-relaxed text-zinc-500">
+                            {fixture.note}
+                          </p>
+                        )}
+                      </div>
+                      <div className="flex shrink-0 flex-col gap-0.5 text-sm text-zinc-500 sm:text-right">
+                        <span className="font-mono font-semibold text-zinc-300">
+                          {fixture.time}
+                        </span>
+                        <span className="text-xs">{fixture.venue}</span>
+                      </div>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            ))
+          )}
         </div>
 
         <div className="mt-10 flex flex-col items-center gap-3 sm:flex-row sm:justify-center">

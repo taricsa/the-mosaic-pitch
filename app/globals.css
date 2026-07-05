@@ -36,6 +36,12 @@
   animation: maple-float 3s ease-in-out infinite;
 }
 
+.exporting-tile,
+.exporting-tile * {
+  animation: none !important;
+  transform: none !important;
+}
+
 :root {
   --background: #09090b;
   --foreground: #fafafa;

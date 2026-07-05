@@ -5,6 +5,10 @@ import { toPng } from "html-to-image";
 import { getHeritageFlag } from "@/lib/heritage-flags";
 
 const SHARE_URL = "https://themosaicpitch.vercel.app";
+const CARD_WIDTH = 360;
+const CARD_HEIGHT = 450;
+const EXPORT_WIDTH = 1080;
+const EXPORT_HEIGHT = 1350;
 
 function formatSurname(value: string) {
   return value.trim().toUpperCase();
@@ -55,11 +59,21 @@ export default function HeritageCardGenerator() {
   const downloadCard = useCallback(async () => {
     if (!cardRef.current || !canGenerate) return;
     setDownloading(true);
+    const node = cardRef.current;
+    node.classList.add("exporting-tile");
     try {
-      const dataUrl = await toPng(cardRef.current, {
+      const dataUrl = await toPng(node, {
         cacheBust: true,
-        pixelRatio: 2,
+        width: EXPORT_WIDTH,
+        height: EXPORT_HEIGHT,
+        pixelRatio: 1,
         backgroundColor: "#1A1A1A",
+        style: {
+          width: `${CARD_WIDTH}px`,
+          height: `${CARD_HEIGHT}px`,
+          margin: "0",
+          transform: "none",
+        },
       });
       const link = document.createElement("a");
       link.download = `${displaySurname.toLowerCase()}-mosaic-tile.png`;
@@ -68,6 +82,7 @@ export default function HeritageCardGenerator() {
     } catch {
       /* download failed silently */
     } finally {
+      node.classList.remove("exporting-tile");
       setDownloading(false);
     }
   }, [canGenerate, displaySurname]);
@@ -158,65 +173,67 @@ export default function HeritageCardGenerator() {
 
         {generated && canGenerate && (
           <div className="mt-10 animate-panel-in space-y-6">
-            {/* 4:5 aspect ratio card for social sharing */}
-            <div
-              ref={cardRef}
-              className="relative mx-auto aspect-[4/5] w-full max-w-[360px] overflow-hidden rounded-3xl border-4 border-[#C5202C] bg-gradient-to-br from-[#1A1A1A] via-[#141414] to-[#1A1A1A] shadow-2xl shadow-[#C5202C]/20"
-            >
+            <div className="flex justify-center">
               <div
-                className="pointer-events-none absolute left-4 top-4 flex h-11 w-11 items-center justify-center rounded-full border-2 border-[#C9A227] bg-[#C9A227]/10 text-xl"
-                aria-hidden
+                ref={cardRef}
+                className="relative box-border rounded-3xl border-4 border-[#C5202C] bg-gradient-to-br from-[#1A1A1A] via-[#141414] to-[#1A1A1A] shadow-2xl shadow-[#C5202C]/20"
+                style={{ width: CARD_WIDTH, height: CARD_HEIGHT }}
               >
-                {heritageFlag}
-              </div>
-              <div
-                className="pointer-events-none absolute bottom-4 right-4 flex h-11 w-11 items-center justify-center rounded-full border-2 border-[#C9A227] bg-[#C9A227]/10 text-lg"
-                aria-hidden
-              >
-                🍁
-              </div>
-
-              <div className="flex h-full flex-col justify-between p-6 sm:p-8">
-                <div className="rounded-2xl border border-[#C9A227]/50 p-5 text-center">
-                  <span
-                    className="animate-maple-float inline-block text-4xl"
-                    role="img"
-                    aria-label="Maple leaf"
-                  >
-                    🍁
-                  </span>
-                  <p className="mt-2 text-[9px] font-semibold uppercase tracking-[0.3em] text-[#C9A227]">
-                    The Mosaic Pitch · Official Tile
-                  </p>
+                <div
+                  className="pointer-events-none absolute left-4 top-4 flex h-11 w-11 items-center justify-center rounded-full border-2 border-[#C9A227] bg-[#C9A227]/10 text-xl"
+                  aria-hidden
+                >
+                  {heritageFlag}
+                </div>
+                <div
+                  className="pointer-events-none absolute bottom-4 right-4 flex h-11 w-11 items-center justify-center rounded-full border-2 border-[#C9A227] bg-[#C9A227]/10 text-lg"
+                  aria-hidden
+                >
+                  🍁
                 </div>
 
-                <div className="flex flex-1 flex-col items-center justify-center px-2 text-center">
-                  <p className="text-xl font-black leading-snug tracking-wide text-[#FAFAFA] sm:text-2xl">
-                    <span className="text-[#C9A227]">{displaySurname}</span>{" "}
-                    FAMILY.
-                  </p>
-                  <p className="mt-4 text-sm font-bold leading-relaxed text-white/90 sm:text-base">
-                    Rooted in{" "}
-                    <span className="inline-flex items-center gap-1.5 text-[#C5202C]">
-                      {heritageFlag} {displayHeritage}
+                <div className="flex h-full flex-col justify-between p-6">
+                  <div className="rounded-2xl border border-[#C9A227]/50 p-4 text-center">
+                    <span
+                      className="animate-maple-float inline-block text-4xl"
+                      role="img"
+                      aria-label="Maple leaf"
+                    >
+                      🍁
                     </span>
-                    .
-                    <br />
-                    Grown under the True North.
-                    <br />
-                    United by the Beautiful Game.
-                  </p>
-                  <p className="mt-5 text-2xl">🇨🇦⚽</p>
-                </div>
-
-                <div className="flex items-center justify-center gap-3">
-                  <div className="h-px flex-1 bg-gradient-to-r from-transparent to-[#C9A227]" />
-                  <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full border-2 border-[#C9A227] bg-[#C9A227]/15 shadow-inner">
-                    <span className="text-[10px] font-black uppercase tracking-wider text-[#C9A227]">
-                      CA
-                    </span>
+                    <p className="mt-2 text-[8px] font-semibold uppercase leading-tight tracking-[0.18em] text-[#C9A227]">
+                      The Mosaic Pitch · Official Tile
+                    </p>
                   </div>
-                  <div className="h-px flex-1 bg-gradient-to-l from-transparent to-[#C9A227]" />
+
+                  <div className="flex flex-1 flex-col items-center justify-center px-2 text-center">
+                    <p className="text-xl font-black leading-snug tracking-wide text-[#FAFAFA]">
+                      <span className="text-[#C9A227]">{displaySurname}</span>{" "}
+                      FAMILY.
+                    </p>
+                    <p className="mt-4 text-sm font-bold leading-relaxed text-white/90">
+                      Rooted in{" "}
+                      <span className="inline-flex items-center gap-1.5 text-[#C5202C]">
+                        {heritageFlag} {displayHeritage}
+                      </span>
+                      .
+                      <br />
+                      Grown under the True North.
+                      <br />
+                      United by the Beautiful Game.
+                    </p>
+                    <p className="mt-5 text-2xl">🇨🇦⚽</p>
+                  </div>
+
+                  <div className="flex items-center justify-center gap-3">
+                    <div className="h-px flex-1 bg-gradient-to-r from-transparent to-[#C9A227]" />
+                    <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full border-2 border-[#C9A227] bg-[#C9A227]/15 shadow-inner">
+                      <span className="text-[10px] font-black uppercase tracking-wider text-[#C9A227]">
+                        CA
+                      </span>
+                    </div>
+                    <div className="h-px flex-1 bg-gradient-to-l from-transparent to-[#C9A227]" />
+                  </div>
                 </div>
               </div>
             </div>
