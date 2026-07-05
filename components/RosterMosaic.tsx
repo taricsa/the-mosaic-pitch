@@ -1,149 +1,13 @@
 "use client";
 
 import { useCallback, useEffect, useState } from "react";
+import {
+  MENS_SQUAD,
+  WOMENS_SQUAD,
+  type Player,
+} from "@/lib/roster-data";
 
 type Squad = "men" | "women";
-
-type Player = {
-  id: string;
-  name: string;
-  number: number;
-  position: string;
-  bornIn: string;
-  heritage: string;
-  nowRepresents: string;
-  tagline: string;
-  story: string;
-  quote: string;
-  initials: string;
-};
-
-const MENS_SQUAD: Player[] = [
-  {
-    id: "alphonso-davies",
-    name: "Alphonso Davies",
-    number: 19,
-    position: "Left Back / Winger",
-    bornIn: "Buduburam, Liberia — a refugee camp",
-    heritage: "Liberian",
-    nowRepresents: "Edmonton, Alberta",
-    tagline: "The heartbeat of our speed.",
-    story:
-      "Born in a refugee camp in Ghana to parents who fled the Liberian civil war, Alphonso arrived in Edmonton as a child. From the fields of Alberta to the biggest stages in world football, his blistering pace and joyful spirit became the pulse of a nation learning to believe.",
-    quote:
-      "Every sprint down the flank is proof that the Canadian mosaic runs faster than anyone expected.",
-    initials: "AD",
-  },
-  {
-    id: "jonathan-david",
-    name: "Jonathan David",
-    number: 20,
-    position: "Striker",
-    bornIn: "Brooklyn, New York",
-    heritage: "Haitian",
-    nowRepresents: "Ottawa, Ontario",
-    tagline: "The clinical finisher of the capital.",
-    story:
-      "Born in Brooklyn to Haitian parents and raised in Ottawa, Jonathan carries the resilience of the Haitian diaspora in every composed finish. Cool, humble, and ruthless in front of goal, he turned a capital-city upbringing into a European scoring reputation.",
-    quote:
-      "When I score for Canada, I carry Brooklyn, Port-au-Prince, and Ottawa in every celebration.",
-    initials: "JD",
-  },
-  {
-    id: "ismael-kone",
-    name: "Ismaël Koné",
-    number: 8,
-    position: "Central Midfielder",
-    bornIn: "Abidjan, Ivory Coast",
-    heritage: "Ivorian",
-    nowRepresents: "Montréal, Québec",
-    tagline: "The midfield elegance of Quebec.",
-    story:
-      "Born in Abidjan and raised in Montréal, Ismaël learned the game on Québec's concrete and cold before gliding through professional midfields with unmistakable grace. His path embodies the bilingual, multicultural heart of the Canadian project.",
-    quote:
-      "Montréal taught me flair; Canada gave me a stage to share it with the world.",
-    initials: "IK",
-  },
-  {
-    id: "cyle-larin",
-    name: "Cyle Larin",
-    number: 17,
-    position: "Striker",
-    bornIn: "Brampton, Ontario",
-    heritage: "Jamaican",
-    nowRepresents: "Brampton, Ontario",
-    tagline: "The true north's leading talisman.",
-    story:
-      "Brampton-born with proud Jamaican heritage, Cyle rose through Ontario's youth ranks to become one of the most prolific scorers in Canadian history. He represents the second-generation dream of staying home and making the True North proud.",
-    quote:
-      "I never had to leave Canada to prove Canada belongs on the world stage.",
-    initials: "CL",
-  },
-];
-
-const WOMENS_SQUAD: Player[] = [
-  {
-    id: "christine-sinclair",
-    name: "Christine Sinclair",
-    number: 12,
-    position: "Forward",
-    bornIn: "Burnaby, British Columbia",
-    heritage: "Canadian",
-    nowRepresents: "Burnaby, British Columbia",
-    tagline:
-      "The GOAT. 190 International Goals. The ultimate blueprint of Canadian sports history.",
-    story:
-      "From Burnaby pitches to Olympic gold and a record that rewrote world football history, Christine Sinclair didn't just play for Canada — she built the standard every generation after her chases. Her longevity, humility, and ruthlessness in front of goal made her the most important athlete this country has ever produced.",
-    quote:
-      "I wore the maple leaf for decades so every girl in Canada would know her dreams have no ceiling.",
-    initials: "CS",
-  },
-  {
-    id: "kadeisha-buchanan",
-    name: "Kadeisha Buchanan",
-    number: 3,
-    position: "Centre Back",
-    bornIn: "Brampton, Ontario",
-    heritage: "Jamaican",
-    nowRepresents: "Brampton, Ontario",
-    tagline: "The defensive wall. Multi-time UEFA Champions League winner.",
-    story:
-      "Raised in Brampton with Jamaican roots, Kadeisha Buchanan became the backbone of Canada's golden era and a serial winner at the highest club level in Europe. Calm under pressure and ferocious in the tackle, she turned Canadian defending into a global export.",
-    quote:
-      "My heritage gave me fire; Canada gave me the platform to become a champion on every continent.",
-    initials: "KB",
-  },
-  {
-    id: "ashley-lawrence",
-    name: "Ashley Lawrence",
-    number: 10,
-    position: "Full Back / Midfielder",
-    bornIn: "Toronto, Ontario",
-    heritage: "Jamaican",
-    nowRepresents: "Toronto, Ontario",
-    tagline: "World-class versatility. The engine of the Canadian flanks.",
-    story:
-      "Toronto-born with Jamaican heritage, Ashley Lawrence redefined what a modern Canadian player could be — elite in defence, devastating in attack, and tireless for ninety minutes. Her Olympic gold medal run showcased a player who could dominate any position on the pitch.",
-    quote:
-      "Versatility is my heritage story — many roots, one jersey, infinite possibility.",
-    initials: "AL",
-  },
-  {
-    id: "vanessa-gilles",
-    name: "Vanessa Gilles",
-    number: 14,
-    position: "Centre Back",
-    bornIn: "Montréal, Québec",
-    heritage: "French",
-    nowRepresents: "Montréal, Québec",
-    tagline: "The aerial fortress. Unmatched heart in the penalty box.",
-    story:
-      "Born in Montréal with French heritage, Vanessa Gilles brought uncompromising aerial dominance and emotional leadership to Canada's back line. Her rise from domestic leagues to Olympic glory embodies the depth of talent across every province and every community.",
-    quote:
-      "Montréal raised me with pride; the maple leaf taught me to stand tall for everyone behind me.",
-    initials: "VG",
-  },
-];
 
 const SQUADS: Record<Squad, { label: string; players: Player[]; subtitle: string }> = {
   men: {
@@ -152,7 +16,7 @@ const SQUADS: Record<Squad, { label: string; players: Player[]; subtitle: string
     subtitle: "Les Rouges — the golden generation that changed everything.",
   },
   women: {
-    label: "🌟 Women's Championship Squad",
+    label: "🍁 Women's Championship Squad",
     players: WOMENS_SQUAD,
     subtitle: "Olympic champions. World beaters. The standard-bearers of Canadian sport.",
   },
@@ -258,7 +122,7 @@ export default function RosterMosaic() {
         </header>
 
         <div
-          className="mx-auto mt-10 flex max-w-xl flex-col gap-2 rounded-2xl border border-[#C9A227]/30 bg-[#141414] p-1.5 sm:flex-row"
+          className="mx-auto mt-10 flex max-w-2xl flex-col gap-2 rounded-2xl border border-[#C9A227]/30 bg-[#141414] p-1.5 sm:flex-row"
           role="tablist"
           aria-label="Select national squad"
         >
@@ -285,11 +149,14 @@ export default function RosterMosaic() {
 
         <p className="mt-6 text-center text-sm font-medium text-[#C5202C]">
           {squad.subtitle}
+          <span className="mt-1 block text-xs text-white/40">
+            {squad.players.length} players
+          </span>
         </p>
 
         <div
           key={activeSquad}
-          className="mt-12 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4"
+          className="mt-12 grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4"
           role="tabpanel"
         >
           {squad.players.map((player, index) => (
@@ -297,37 +164,37 @@ export default function RosterMosaic() {
               key={player.id}
               type="button"
               onClick={() => setActiveId(player.id)}
-              style={{ animationDelay: `${index * 90}ms` }}
-              className="group relative flex animate-fade-in flex-col overflow-hidden rounded-2xl border border-[#C9A227]/40 bg-gradient-to-b from-[#FAFAFA] to-[#E8E8E8] p-6 text-left text-[#1A1A1A] opacity-0 shadow-lg shadow-black/20 outline-none transition-all duration-300 hover:-translate-y-1.5 hover:border-[#C5202C] hover:shadow-2xl hover:shadow-[#C5202C]/10 focus-visible:ring-2 focus-visible:ring-[#C9A227]"
-              aria-label={`Read the story of ${player.name}`}
+              style={{ animationDelay: `${Math.min(index, 12) * 60}ms` }}
+              className="group relative flex animate-fade-in flex-col overflow-hidden rounded-2xl border border-[#C9A227]/40 bg-gradient-to-b from-[#FAFAFA] to-[#E8E8E8] p-5 text-left text-[#1A1A1A] opacity-0 shadow-lg shadow-black/20 outline-none transition-all duration-300 hover:-translate-y-1 hover:border-[#C5202C] hover:shadow-xl hover:shadow-[#C5202C]/10 focus-visible:ring-2 focus-visible:ring-[#C9A227] sm:p-6"
+              aria-label={`Read more about ${player.name}`}
             >
-              <span className="pointer-events-none absolute -right-6 -top-6 text-[6rem] font-black leading-none text-[#1A1A1A]/5 transition-colors duration-300 group-hover:text-[#C5202C]/15">
+              <span className="pointer-events-none absolute -right-4 -top-4 text-[5rem] font-black leading-none text-[#1A1A1A]/5 transition-colors duration-300 group-hover:text-[#C5202C]/15">
                 {player.number}
               </span>
 
-              <div className="relative flex h-16 w-16 items-center justify-center rounded-full border-2 border-[#C9A227] bg-[#1A1A1A] text-xl font-bold text-[#C9A227] shadow-inner">
+              <div className="relative flex h-14 w-14 items-center justify-center rounded-full border-2 border-[#C9A227] bg-[#1A1A1A] text-lg font-bold text-[#C9A227] shadow-inner">
                 {player.initials}
               </div>
 
-              <h3 className="relative mt-5 text-lg font-bold text-[#1A1A1A]">
+              <h3 className="relative mt-4 text-base font-bold text-[#1A1A1A] sm:text-lg">
                 {player.name}
               </h3>
               <p className="relative mt-1 text-xs font-semibold uppercase tracking-wide text-[#C5202C]">
                 #{player.number} · {player.position}
               </p>
 
-              <div className="relative mt-4 flex flex-wrap items-center gap-2 text-sm text-[#1A1A1A]/70">
+              <div className="relative mt-3 flex flex-wrap items-center gap-1.5 text-xs text-[#1A1A1A]/70 sm:text-sm">
                 <span>{player.heritage}</span>
                 <span className="text-[#C5202C]">➡️</span>
                 <span>{player.nowRepresents}</span>
               </div>
 
-              <p className="relative mt-4 border-t border-[#1A1A1A]/10 pt-4 text-sm italic leading-relaxed text-[#1A1A1A]/80">
+              <p className="relative mt-3 line-clamp-2 border-t border-[#1A1A1A]/10 pt-3 text-xs italic leading-relaxed text-[#1A1A1A]/80 sm:text-sm">
                 &ldquo;{player.tagline}&rdquo;
               </p>
 
-              <span className="relative mt-5 inline-flex items-center gap-1 text-xs font-semibold uppercase tracking-widest text-[#C5202C] opacity-0 transition-opacity duration-300 group-hover:opacity-100">
-                Read the journey
+              <span className="relative mt-4 inline-flex items-center gap-1 text-xs font-semibold uppercase tracking-widest text-[#C5202C] opacity-0 transition-opacity duration-300 group-hover:opacity-100">
+                Read more
                 <span
                   aria-hidden
                   className="transition-transform duration-300 group-hover:translate-x-1"
@@ -378,7 +245,7 @@ export default function RosterMosaic() {
                   </p>
                   <h3
                     id="roster-modal-title"
-                    className="mt-1 text-2xl font-black text-[#1A1A1A] sm:text-3xl"
+                    className="mt-1 text-2xl font-black tracking-tight text-[#1A1A1A] sm:text-3xl"
                   >
                     {activePlayer.name}
                   </h3>
@@ -411,7 +278,7 @@ export default function RosterMosaic() {
                 <button
                   type="button"
                   onClick={close}
-                  className="rounded-full border-2 border-[#C9A227] bg-[#1A1A1A] px-5 py-2 text-sm font-semibold text-[#C9A227] transition-colors hover:bg-[#C5202C] hover:border-[#C5202C] hover:text-[#FAFAFA] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#C9A227]"
+                  className="rounded-full border-2 border-[#C9A227] bg-[#1A1A1A] px-5 py-2 text-sm font-semibold text-[#C9A227] transition-colors hover:border-[#C5202C] hover:bg-[#C5202C] hover:text-[#FAFAFA] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#C9A227]"
                 >
                   Close
                 </button>

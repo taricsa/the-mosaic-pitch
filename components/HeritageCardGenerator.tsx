@@ -1,6 +1,8 @@
 "use client";
 
-import { useCallback, useMemo, useState } from "react";
+import { useCallback, useMemo, useRef, useState } from "react";
+import { toPng } from "html-to-image";
+import { getHeritageFlag } from "@/lib/heritage-flags";
 
 const SHARE_URL = "https://themosaicpitch.vercel.app";
 
@@ -13,19 +15,20 @@ function formatHeritage(value: string) {
 }
 
 export default function HeritageCardGenerator() {
+  const cardRef = useRef<HTMLDivElement>(null);
   const [surname, setSurname] = useState("");
   const [heritage, setHeritage] = useState("");
   const [generated, setGenerated] = useState(false);
   const [copied, setCopied] = useState(false);
+  const [downloading, setDownloading] = useState(false);
 
   const displaySurname = formatSurname(surname);
   const displayHeritage = formatHeritage(heritage);
   const canGenerate = displaySurname.length > 0 && displayHeritage.length > 0;
-
-  const cardText = useMemo(() => {
-    if (!canGenerate) return "";
-    return `${displaySurname} FAMILY. Rooted in ${displayHeritage}. Grown under the True North. United by the Beautiful Game. 🇨🇦⚽`;
-  }, [canGenerate, displaySurname, displayHeritage]);
+  const heritageFlag = useMemo(
+    () => getHeritageFlag(displayHeritage),
+    [displayHeritage],
+  );
 
   const shareText = useMemo(() => {
     if (!canGenerate) return "";
@@ -49,6 +52,26 @@ export default function HeritageCardGenerator() {
     }
   }, [shareText]);
 
+  const downloadCard = useCallback(async () => {
+    if (!cardRef.current || !canGenerate) return;
+    setDownloading(true);
+    try {
+      const dataUrl = await toPng(cardRef.current, {
+        cacheBust: true,
+        pixelRatio: 2,
+        backgroundColor: "#1A1A1A",
+      });
+      const link = document.createElement("a");
+      link.download = `${displaySurname.toLowerCase()}-mosaic-tile.png`;
+      link.href = dataUrl;
+      link.click();
+    } catch {
+      /* download failed silently */
+    } finally {
+      setDownloading(false);
+    }
+  }, [canGenerate, displaySurname]);
+
   return (
     <section
       id="heritage-card-generator"
@@ -63,12 +86,12 @@ export default function HeritageCardGenerator() {
         aria-hidden
       />
 
-      <div className="relative mx-auto max-w-2xl">
+      <div className="relative mx-auto max-w-md">
         <header className="animate-fade-in text-center">
           <p className="mb-4 inline-block rounded-full border border-[#C9A227]/50 bg-[#1A1A1A]/5 px-4 py-1 text-xs font-semibold uppercase tracking-[0.25em] text-[#C5202C]">
             Share the Mosaic
           </p>
-          <h2 className="text-balance text-3xl font-black leading-tight tracking-tight text-[#1A1A1A] sm:text-4xl lg:text-5xl">
+          <h2 className="text-balance text-3xl font-black leading-tight tracking-tight text-[#1A1A1A] sm:text-4xl">
             Affix Your Tile to the Canadian Mosaic
           </h2>
           <p className="mx-auto mt-5 max-w-lg text-pretty text-base leading-relaxed text-[#1A1A1A]/60">
@@ -135,69 +158,78 @@ export default function HeritageCardGenerator() {
 
         {generated && canGenerate && (
           <div className="mt-10 animate-panel-in space-y-6">
-            <div className="relative overflow-hidden rounded-3xl border-4 border-[#C5202C] bg-gradient-to-br from-[#1A1A1A] via-[#141414] to-[#1A1A1A] p-8 shadow-2xl shadow-[#C5202C]/20 sm:p-10">
-              {/* Gold corner seals */}
+            {/* 4:5 aspect ratio card for social sharing */}
+            <div
+              ref={cardRef}
+              className="relative mx-auto aspect-[4/5] w-full max-w-[360px] overflow-hidden rounded-3xl border-4 border-[#C5202C] bg-gradient-to-br from-[#1A1A1A] via-[#141414] to-[#1A1A1A] shadow-2xl shadow-[#C5202C]/20"
+            >
               <div
-                className="pointer-events-none absolute left-4 top-4 h-10 w-10 rounded-full border-2 border-[#C9A227] bg-[#C9A227]/10"
+                className="pointer-events-none absolute left-4 top-4 flex h-11 w-11 items-center justify-center rounded-full border-2 border-[#C9A227] bg-[#C9A227]/10 text-xl"
                 aria-hidden
               >
-                <div className="flex h-full w-full items-center justify-center text-[10px] font-black text-[#C9A227]">
-                  🍁
-                </div>
+                {heritageFlag}
               </div>
               <div
-                className="pointer-events-none absolute bottom-4 right-4 h-10 w-10 rounded-full border-2 border-[#C9A227] bg-[#C9A227]/10"
+                className="pointer-events-none absolute bottom-4 right-4 flex h-11 w-11 items-center justify-center rounded-full border-2 border-[#C9A227] bg-[#C9A227]/10 text-lg"
                 aria-hidden
               >
-                <div className="flex h-full w-full items-center justify-center text-[10px] font-black text-[#C9A227]">
-                  ⚽
-                </div>
+                🍁
               </div>
 
-              {/* Inner gold frame */}
-              <div className="rounded-2xl border border-[#C9A227]/50 p-6 sm:p-8">
-                <div className="flex flex-col items-center text-center">
+              <div className="flex h-full flex-col justify-between p-6 sm:p-8">
+                <div className="rounded-2xl border border-[#C9A227]/50 p-5 text-center">
                   <span
-                    className="animate-maple-float text-5xl"
+                    className="animate-maple-float inline-block text-4xl"
                     role="img"
                     aria-label="Maple leaf"
                   >
                     🍁
                   </span>
-
-                  <p className="mt-2 text-[10px] font-semibold uppercase tracking-[0.35em] text-[#C9A227]">
+                  <p className="mt-2 text-[9px] font-semibold uppercase tracking-[0.3em] text-[#C9A227]">
                     The Mosaic Pitch · Official Tile
                   </p>
+                </div>
 
-                  <p className="mt-6 max-w-sm text-balance text-lg font-black leading-snug tracking-wide text-[#FAFAFA] sm:text-xl">
+                <div className="flex flex-1 flex-col items-center justify-center px-2 text-center">
+                  <p className="text-xl font-black leading-snug tracking-wide text-[#FAFAFA] sm:text-2xl">
                     <span className="text-[#C9A227]">{displaySurname}</span>{" "}
                     FAMILY.
-                    <br />
-                    <span className="mt-3 block text-base font-bold leading-relaxed text-white/90 sm:text-lg">
-                      Rooted in{" "}
-                      <span className="text-[#C5202C]">{displayHeritage}</span>.
-                      <br />
-                      Grown under the True North.
-                      <br />
-                      United by the Beautiful Game.
-                    </span>
-                    <span className="mt-4 block text-2xl">🇨🇦⚽</span>
                   </p>
+                  <p className="mt-4 text-sm font-bold leading-relaxed text-white/90 sm:text-base">
+                    Rooted in{" "}
+                    <span className="inline-flex items-center gap-1.5 text-[#C5202C]">
+                      {heritageFlag} {displayHeritage}
+                    </span>
+                    .
+                    <br />
+                    Grown under the True North.
+                    <br />
+                    United by the Beautiful Game.
+                  </p>
+                  <p className="mt-5 text-2xl">🇨🇦⚽</p>
+                </div>
 
-                  <div className="mt-8 flex items-center gap-3">
-                    <div className="h-px w-12 bg-gradient-to-r from-transparent to-[#C9A227]" />
-                    <div className="flex h-12 w-12 items-center justify-center rounded-full border-2 border-[#C9A227] bg-[#C9A227]/15 shadow-inner">
-                      <span className="text-xs font-black uppercase tracking-wider text-[#C9A227]">
-                        CA
-                      </span>
-                    </div>
-                    <div className="h-px w-12 bg-gradient-to-l from-transparent to-[#C9A227]" />
+                <div className="flex items-center justify-center gap-3">
+                  <div className="h-px flex-1 bg-gradient-to-r from-transparent to-[#C9A227]" />
+                  <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full border-2 border-[#C9A227] bg-[#C9A227]/15 shadow-inner">
+                    <span className="text-[10px] font-black uppercase tracking-wider text-[#C9A227]">
+                      CA
+                    </span>
                   </div>
+                  <div className="h-px flex-1 bg-gradient-to-l from-transparent to-[#C9A227]" />
                 </div>
               </div>
             </div>
 
-            <div className="flex flex-col items-center gap-4">
+            <div className="flex flex-col items-center gap-3">
+              <button
+                type="button"
+                onClick={downloadCard}
+                disabled={downloading}
+                className="inline-flex w-full items-center justify-center gap-2 rounded-full border-2 border-[#C5202C] bg-[#C5202C] px-6 py-3.5 text-sm font-bold text-white transition-all hover:-translate-y-0.5 hover:bg-[#a01828] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#C5202C] disabled:opacity-60 sm:w-auto"
+              >
+                {downloading ? "Preparing download…" : "Download Tile Image"}
+              </button>
               <button
                 type="button"
                 onClick={copyShareLink}
@@ -206,9 +238,9 @@ export default function HeritageCardGenerator() {
               >
                 {copied ? "Copied to clipboard!" : "Copy Share Link"}
               </button>
-              <p className="max-w-md text-center text-xs leading-relaxed text-[#1A1A1A]/50">
-                Paste on Instagram, X, or group chat to invite your family and
-                friends to affix their tile.
+              <p className="max-w-sm text-center text-xs leading-relaxed text-[#1A1A1A]/50">
+                Download the 4:5 tile for Instagram, or copy the link to invite
+                friends and family.
               </p>
             </div>
           </div>

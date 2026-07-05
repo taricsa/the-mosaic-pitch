@@ -1,7 +1,10 @@
 import FandomQuiz from "@/components/FandomQuiz";
 import HeritageCardGenerator from "@/components/HeritageCardGenerator";
+import MatchCalendar from "@/components/MatchCalendar";
 import NeighborhoodCounter from "@/components/NeighborhoodCounter";
 import RosterMosaic from "@/components/RosterMosaic";
+import SiteFooter from "@/components/SiteFooter";
+import WomensWorldCupCountdown from "@/components/WomensWorldCupCountdown";
 
 const ACHIEVEMENTS = [
   {
@@ -68,6 +71,12 @@ export default function Home() {
               className="inline-flex items-center justify-center rounded-full border border-zinc-700 bg-zinc-900 px-7 py-3 text-sm font-bold text-zinc-200 transition-all hover:-translate-y-0.5 hover:border-zinc-500 hover:bg-zinc-800 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#C9A227]"
             >
               Find your club
+            </a>
+            <a
+              href="#heritage-card-generator"
+              className="inline-flex items-center justify-center rounded-full border border-[#C5202C]/60 bg-[#C5202C]/15 px-7 py-3 text-sm font-bold text-[#C5202C] transition-all hover:-translate-y-0.5 hover:bg-[#C5202C]/25 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#C5202C]"
+            >
+              Share your tile
             </a>
           </div>
         </div>
@@ -145,6 +154,8 @@ export default function Home() {
         </div>
       </section>
 
+      <WomensWorldCupCountdown />
+
       {/* Main experience */}
       <main className="flex flex-col">
         <div id="roster-mosaic">
@@ -152,21 +163,10 @@ export default function Home() {
         </div>
         <FandomQuiz />
         <HeritageCardGenerator />
+        <MatchCalendar />
       </main>
 
-      {/* Footer */}
-      <footer className="border-t border-zinc-800 bg-zinc-950 px-6 py-12 text-center sm:px-10 lg:px-16">
-        <p className="text-sm font-bold uppercase tracking-[0.2em] text-[#C9A227]/80">
-          The Mosaic Pitch
-        </p>
-        <p className="mx-auto mt-3 max-w-lg text-sm leading-relaxed text-zinc-500">
-          An inclusive community hub for every Canadian who discovered football
-          during the World Cup — and decided to stay.
-        </p>
-        <p className="mt-6 text-xs text-zinc-600">
-          For the love of the game. For the love of this country.
-        </p>
-      </footer>
+      <SiteFooter />
     </div>
   );
 }
