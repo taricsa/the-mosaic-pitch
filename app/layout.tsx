@@ -31,7 +31,9 @@ export const metadata: Metadata = {
     "Canadian Football",
     "True North Mosaic",
   ],
-  authors: [{ name: "The Mosaic Pitch Community" }],
+  alternates: {
+    canonical: "/",
+  },
   openGraph: {
     title: "The Mosaic Pitch — Canadian Football Mosaic",
     description:
