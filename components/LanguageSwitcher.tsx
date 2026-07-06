@@ -2,6 +2,9 @@
 
 import { useLanguage, type Language } from "@/context/LanguageContext";
 
+// Hidden until full-site EN/FR translation is ready. Re-enable in app/page.tsx when complete.
+const ENABLED = false;
+
 const OPTIONS: { code: Language; label: string; activeClass: string }[] = [
   {
     code: "en",
@@ -18,6 +21,8 @@ const OPTIONS: { code: Language; label: string; activeClass: string }[] = [
 ];
 
 export default function LanguageSwitcher() {
+  if (!ENABLED) return null;
+
   const { currentLanguage, toggleLanguage } = useLanguage();
 
   function handleSelect(target: Language) {

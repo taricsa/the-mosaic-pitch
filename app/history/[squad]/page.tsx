@@ -153,7 +153,7 @@ export default async function HistoryPage({
   if (!isSquad(squad)) notFound();
 
   const config = SQUAD_CONFIG[squad];
-  const campaigns = [...config.campaigns].sort((a, b) => a.year - b.year);
+  const campaigns = [...config.campaigns].sort((a, b) => b.year - a.year);
 
   return (
     <div className="flex min-h-full flex-col bg-zinc-950 text-zinc-50">
@@ -173,7 +173,7 @@ export default async function HistoryPage({
           </Link>
 
           <p
-            className="animate-fade-in mt-8 inline-flex items-center gap-2 rounded-full border px-4 py-1.5 text-xs font-bold uppercase tracking-[0.25em]"
+            className="animate-fade-in mt-12 inline-flex items-center gap-2 rounded-full border px-4 py-1.5 text-xs font-bold uppercase tracking-[0.25em] sm:mt-14"
             style={{
               borderColor: config.accentBorder,
               backgroundColor: config.accentMuted,
