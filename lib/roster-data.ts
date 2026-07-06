@@ -11,6 +11,7 @@ export type Player = {
   quote: string;
   initials: string;
   imageUrl?: string;
+  isHomegrown?: boolean;
 };
 
 function p(
@@ -25,6 +26,7 @@ function p(
   story: string,
   quote: string,
   imageUrl?: string,
+  isHomegrown?: boolean,
 ): Player {
   const initials = name
     .split(" ")
@@ -45,7 +47,54 @@ function p(
     quote,
     initials,
     ...(imageUrl ? { imageUrl } : {}),
+    ...(isHomegrown ? { isHomegrown } : {}),
   };
+}
+
+const CANADIAN_BORN_MARKERS = [
+  "canada",
+  " qc",
+  ", qc",
+  "québec",
+  "quebec",
+  " on",
+  ", on",
+  "ontario",
+  " bc",
+  ", bc",
+  "british columbia",
+  " ab",
+  ", ab",
+  "alberta",
+  " sk",
+  "saskatchewan",
+  " mb",
+  "manitoba",
+  " nb",
+  "brunswick",
+  " ns",
+  "scotia",
+  " pe",
+  "prince edward",
+  " nl",
+  "newfoundland",
+  "labrador",
+  "yukon",
+  "nunavut",
+  "northwest territories",
+] as const;
+
+function isBornInCanada(bornIn: string): boolean {
+  const born = bornIn.toLowerCase();
+  return CANADIAN_BORN_MARKERS.some((marker) => born.includes(marker));
+}
+
+export function isHomegrownPlayer(player: Player): boolean {
+  if (player.isHomegrown) return true;
+  if (!isBornInCanada(player.bornIn)) return false;
+
+  const heritage = player.heritage.toLowerCase();
+  return heritage === "canadian" || heritage === "french-canadian";
 }
 
 export const MENS_SQUAD: Player[] = [

@@ -4,6 +4,7 @@ import { useCallback, useEffect, useState } from "react";
 import {
   MENS_SQUAD,
   WOMENS_SQUAD,
+  isHomegrownPlayer,
   type Player,
 } from "@/lib/roster-data";
 
@@ -216,9 +217,17 @@ export default function RosterMosaic() {
               </p>
 
               <div className="relative mt-3 flex flex-wrap items-center gap-1.5 text-xs text-[#1A1A1A]/70 sm:text-sm">
-                <span>{player.heritage}</span>
-                <span className="text-[#C5202C]">➡️</span>
-                <span>{player.nowRepresents}</span>
+                {isHomegrownPlayer(player) ? (
+                  <span className="font-medium">
+                    Homegrown 🍁 {player.heritage}
+                  </span>
+                ) : (
+                  <>
+                    <span>{player.heritage}</span>
+                    <span className="text-[#C5202C]">➡️</span>
+                    <span>{player.nowRepresents}</span>
+                  </>
+                )}
               </div>
 
               <p className="relative mt-3 line-clamp-2 border-t border-[#1A1A1A]/10 pt-3 text-xs italic leading-relaxed text-[#1A1A1A]/80 sm:text-sm">
