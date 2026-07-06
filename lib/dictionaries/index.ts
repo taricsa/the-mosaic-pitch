@@ -245,8 +245,8 @@ export type HistorySquadPageDictionary = {
   squadNavAria: string;
   mensHistoryNav: string;
   womensHistoryNav: string;
-  campaignWorldCupLabel: string;
   headCoachLabel: string;
+  legendsLabel: string;
   behindTheBench: string;
   squads: {
     men: HistorySquadPageSquadCopy;
@@ -676,21 +676,21 @@ export const en: Dictionary = {
     squadNavAria: "Squad history navigation",
     mensHistoryNav: "Men's History",
     womensHistoryNav: "Women's History",
-    campaignWorldCupLabel: "FIFA World Cup · {{year}}",
     headCoachLabel: "Head Coach:",
+    legendsLabel: "Squad Legends / Roster",
     behindTheBench: "Behind the Bench",
     squads: {
       men: {
         label: "Les Rouges",
-        title: "Men's World Cup History",
+        title: "Men's National Team History",
         subtitle:
-          "From Mexico 1986 to a home-soil knockout run — every Maple Leaf campaign.",
+          "From CONCACAF crowns and Gold Cup glory to Copa América and a home-soil World Cup knockout run — every Maple Leaf campaign.",
       },
       women: {
         label: "Canada WNT",
-        title: "Women's World Cup History",
+        title: "Women's National Team History",
         subtitle:
-          "Eight tournaments. Olympic gold legacies. One unstoppable golden generation.",
+          "World Cups, continental titles, and three Olympic medals — including Tokyo gold. One unstoppable golden generation.",
       },
     },
   },
@@ -1121,21 +1121,21 @@ export const fr: Dictionary = {
     squadNavAria: "Navigation historique des équipes",
     mensHistoryNav: "Historique masculin",
     womensHistoryNav: "Historique féminin",
-    campaignWorldCupLabel: "Coupe du monde de la FIFA · {{year}}",
     headCoachLabel: "Entraîneur-chef :",
+    legendsLabel: "Légendes de l'effectif / Joueurs",
     behindTheBench: "Derrière le banc",
     squads: {
       men: {
         label: "Les Rouges",
-        title: "Historique de la Coupe du monde masculine",
+        title: "Historique de l'équipe nationale masculine",
         subtitle:
-          "Du Mexique 1986 à une course éliminatoire à domicile — chaque campagne de la feuille d'érable.",
+          "Des couronnes CONCACAF et la gloire de la Gold Cup à la Copa América et une course éliminatoire à domicile — chaque campagne de la feuille d'érable.",
       },
       women: {
         label: "Équipe nationale féminine du Canada",
-        title: "Historique de la Coupe du monde féminine",
+        title: "Historique de l'équipe nationale féminine",
         subtitle:
-          "Huit tournois. L'héritage de l'or olympique. Une génération dorée imparable.",
+          "Coupe du monde, titres continentaux et trois médailles olympiques — dont l'or à Tokyo. Une génération dorée imparable.",
       },
     },
   },

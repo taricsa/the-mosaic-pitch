@@ -5,9 +5,9 @@ import { useMemo } from "react";
 import { useLanguage } from "@/context/LanguageContext";
 import SiteFooter from "@/components/SiteFooter";
 import {
-  MENS_WC_HISTORY,
-  WOMENS_WC_HISTORY,
-  type WorldCupCampaign,
+  MENS_HISTORY,
+  WOMENS_HISTORY,
+  type TournamentCampaign,
 } from "@/lib/history-data";
 import { getDictionary } from "@/lib/dictionaries";
 
@@ -21,7 +21,7 @@ const SQUAD_VISUAL_CONFIG = {
     accentBorder: "rgba(197,32,44,0.4)",
     gradient:
       "radial-gradient(ellipse 80% 60% at 50% -10%, rgba(197,32,44,0.35), transparent)",
-    campaigns: MENS_WC_HISTORY,
+    campaigns: MENS_HISTORY,
   },
   women: {
     emblem: "🥇",
@@ -30,16 +30,9 @@ const SQUAD_VISUAL_CONFIG = {
     accentBorder: "rgba(201,162,39,0.45)",
     gradient:
       "radial-gradient(ellipse 80% 60% at 50% -10%, rgba(201,162,39,0.25), transparent)",
-    campaigns: WOMENS_WC_HISTORY,
+    campaigns: WOMENS_HISTORY,
   },
 } as const;
-
-function interpolate(template: string, values: Record<string, string>): string {
-  return Object.entries(values).reduce(
-    (result, [key, value]) => result.replace(`{{${key}}}`, value),
-    template,
-  );
-}
 
 function CampaignCard({
   campaign,
@@ -47,17 +40,17 @@ function CampaignCard({
   accentBorder,
   accentMuted,
   index,
-  campaignWorldCupLabel,
   headCoachLabel,
+  legendsLabel,
   behindTheBench,
 }: {
-  campaign: WorldCupCampaign;
+  campaign: TournamentCampaign;
   accent: string;
   accentBorder: string;
   accentMuted: string;
   index: number;
-  campaignWorldCupLabel: string;
   headCoachLabel: string;
+  legendsLabel: string;
   behindTheBench: string;
 }) {
   return (
@@ -74,9 +67,7 @@ function CampaignCard({
             className="text-xs font-bold uppercase tracking-[0.25em]"
             style={{ color: accent }}
           >
-            {interpolate(campaignWorldCupLabel, {
-              year: String(campaign.year),
-            })}
+            {campaign.tournament} · {campaign.year}
           </p>
           <h2 className="mt-2 text-2xl font-black tracking-tight text-zinc-50 sm:text-3xl">
             {campaign.hostCountry}
@@ -94,6 +85,27 @@ function CampaignCard({
         {headCoachLabel}{" "}
         <span className="font-bold text-zinc-50">{campaign.headCoach}</span>
       </p>
+
+      <section aria-labelledby={`legends-${campaign.id}`} className="mt-6">
+        <h3
+          id={`legends-${campaign.id}`}
+          className="text-xs font-bold uppercase tracking-[0.2em] text-zinc-500"
+        >
+          {legendsLabel}
+        </h3>
+        <ul className="mt-3 flex flex-wrap gap-2">
+          {campaign.squad.map((player) => (
+            <li key={`${campaign.id}-${player}`}>
+              <span
+                className="inline-flex rounded-full border px-3 py-1.5 text-xs font-medium text-zinc-300"
+                style={{ borderColor: accentBorder, backgroundColor: accentMuted }}
+              >
+                {player}
+              </span>
+            </li>
+          ))}
+        </ul>
+      </section>
 
       <p className="mt-5 text-sm leading-relaxed text-zinc-400 sm:text-base">
         {campaign.story}
@@ -234,8 +246,8 @@ export default function HistorySquadPageContent({ squad }: { squad: Squad }) {
                 accentBorder={visual.accentBorder}
                 accentMuted={visual.accentMuted}
                 index={index}
-                campaignWorldCupLabel={t.campaignWorldCupLabel}
                 headCoachLabel={t.headCoachLabel}
+                legendsLabel={t.legendsLabel}
                 behindTheBench={t.behindTheBench}
               />
             </li>
