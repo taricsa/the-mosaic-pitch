@@ -1,29 +1,36 @@
 "use client";
 
+import { useMemo } from "react";
 import { useLanguage, type Language } from "@/context/LanguageContext";
+import { getDictionary } from "@/lib/dictionaries";
 
-// Hidden until full-site EN/FR translation is ready. Re-enable in app/page.tsx when complete.
-const ENABLED = false;
+const ENABLED = true;
 
-const OPTIONS: { code: Language; label: string; activeClass: string }[] = [
-  {
-    code: "en",
-    label: "EN",
-    activeClass:
-      "border-[#C5202C] text-[#C5202C] focus-visible:ring-[#C5202C]",
-  },
-  {
-    code: "fr",
-    label: "FR",
-    activeClass:
-      "border-[#C9A227] text-[#C9A227] focus-visible:ring-[#C9A227]",
-  },
-];
+const ACTIVE_CLASSES: Record<Language, string> = {
+  en: "border-[#C5202C] text-[#C5202C] focus-visible:ring-[#C5202C]",
+  fr: "border-[#C9A227] text-[#C9A227] focus-visible:ring-[#C9A227]",
+};
 
 export default function LanguageSwitcher() {
   if (!ENABLED) return null;
 
   const { currentLanguage, toggleLanguage } = useLanguage();
+  const t = getDictionary(currentLanguage).languageSwitcher;
+
+  const options = useMemo(
+    () =>
+      (
+        [
+          { code: "en" as const, label: t.enLabel },
+          { code: "fr" as const, label: t.frLabel },
+        ] as const
+      ).map(({ code, label }) => ({
+        code,
+        label,
+        activeClass: ACTIVE_CLASSES[code],
+      })),
+    [t.enLabel, t.frLabel],
+  );
 
   function handleSelect(target: Language) {
     if (target !== currentLanguage) toggleLanguage();
@@ -33,9 +40,9 @@ export default function LanguageSwitcher() {
     <div
       className="fixed top-4 right-4 z-50 flex items-center gap-1 rounded-full border border-zinc-800 bg-zinc-950/80 p-1 shadow-lg shadow-black/40 backdrop-blur-md"
       role="group"
-      aria-label="Language selector"
+      aria-label={t.ariaLabel}
     >
-      {OPTIONS.map(({ code, label, activeClass }) => {
+      {options.map(({ code, label, activeClass }) => {
         const isActive = currentLanguage === code;
         return (
           <button

@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
+import LanguageSwitcher from "@/components/LanguageSwitcher";
 import { LanguageProvider } from "@/context/LanguageContext";
 import "./globals.css";
 
@@ -69,7 +70,10 @@ export default function RootLayout({
       className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
     >
       <body className="flex min-h-full flex-col bg-zinc-950 font-sans text-zinc-50">
-        <LanguageProvider>{children}</LanguageProvider>
+        <LanguageProvider>
+          <LanguageSwitcher />
+          {children}
+        </LanguageProvider>
       </body>
     </html>
   );

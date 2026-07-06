@@ -2,25 +2,9 @@
 
 import { useEffect, useState } from "react";
 import { useLanguage } from "@/context/LanguageContext";
+import { getDictionary } from "@/lib/dictionaries";
 
 const WWC_2027_KICKOFF = new Date("2027-06-24T17:00:00-03:00");
-
-const COPY = {
-  en: {
-    headline: "Countdown to Canada's next global stage",
-    days: "Days",
-    hours: "Hours",
-    minutes: "Minutes",
-    seconds: "Seconds",
-  },
-  fr: {
-    headline: "Compte à rebours avant la prochaine étape mondiale du Canada",
-    days: "Jours",
-    hours: "Heures",
-    minutes: "Minutes",
-    seconds: "Secondes",
-  },
-} as const;
 
 type TimeLeft = {
   days: number;
@@ -42,7 +26,7 @@ function calcTimeLeft(): TimeLeft | null {
 
 export default function WomensWorldCupCountdown() {
   const { currentLanguage } = useLanguage();
-  const copy = COPY[currentLanguage];
+  const t = getDictionary(currentLanguage).womensWorldCupCountdown;
   const [timeLeft, setTimeLeft] = useState<TimeLeft | null>(null);
 
   useEffect(() => {
@@ -53,10 +37,10 @@ export default function WomensWorldCupCountdown() {
 
   const units = timeLeft
     ? [
-        { key: "days", label: copy.days, value: timeLeft.days },
-        { key: "hours", label: copy.hours, value: timeLeft.hours },
-        { key: "minutes", label: copy.minutes, value: timeLeft.minutes },
-        { key: "seconds", label: copy.seconds, value: timeLeft.seconds },
+        { key: "days", label: t.days, value: timeLeft.days },
+        { key: "hours", label: t.hours, value: timeLeft.hours },
+        { key: "minutes", label: t.minutes, value: timeLeft.minutes },
+        { key: "seconds", label: t.seconds, value: timeLeft.seconds },
       ]
     : [];
 
@@ -67,17 +51,16 @@ export default function WomensWorldCupCountdown() {
     >
       <div className="mx-auto max-w-4xl text-center">
         <p className="text-xs font-bold uppercase tracking-[0.3em] text-[#C5202C]">
-          FIFA Women&apos;s World Cup 2027 · Brazil
+          {t.badge}
         </p>
         <h2
           id="wwc-countdown-heading"
           className="mt-3 text-3xl font-black tracking-tight text-zinc-50 sm:text-4xl"
         >
-          {copy.headline}
+          {t.headline}
         </h2>
         <p className="mx-auto mt-4 max-w-xl text-sm leading-relaxed text-zinc-400 sm:text-base">
-          Olympic champions, world-class talent — Les Rouges return to the
-          biggest stage. The clock is ticking until kickoff in Brazil.
+          {t.subtitle}
         </p>
 
         {timeLeft ? (
@@ -101,13 +84,11 @@ export default function WomensWorldCupCountdown() {
           </div>
         ) : (
           <p className="mt-10 text-lg font-bold text-[#C9A227]">
-            The tournament has begun — go Canada! 🍁
+            {t.tournamentBegun}
           </p>
         )}
 
-        <p className="mt-6 text-xs text-zinc-600">
-          Opening match · June 24, 2027 · Brazil
-        </p>
+        <p className="mt-6 text-xs text-zinc-600">{t.openingMatch}</p>
       </div>
     </section>
   );
