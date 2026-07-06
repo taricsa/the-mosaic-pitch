@@ -1,4 +1,4 @@
-import type { MetadataRoute } from "next";
+import { MetadataRoute } from "next";
 
 export default function sitemap(): MetadataRoute.Sitemap {
   return [
@@ -6,7 +6,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
       url: "https://themosaicpitch.vercel.app",
       lastModified: new Date(),
       changeFrequency: "daily",
-      priority: 1.0,
+      priority: 1,
     },
   ];
 }
