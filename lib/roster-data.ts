@@ -10,6 +10,7 @@ export type Player = {
   story: string;
   quote: string;
   initials: string;
+  imageUrl?: string;
 };
 
 function p(
@@ -23,6 +24,7 @@ function p(
   tagline: string,
   story: string,
   quote: string,
+  imageUrl?: string,
 ): Player {
   const initials = name
     .split(" ")
@@ -42,6 +44,7 @@ function p(
     story,
     quote,
     initials,
+    ...(imageUrl ? { imageUrl } : {}),
   };
 }
 

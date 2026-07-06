@@ -9,6 +9,15 @@ const CARD_WIDTH = 360;
 const CARD_HEIGHT = 450;
 const EXPORT_SCALE = 3; // 360×3 = 1080px wide, 450×3 = 1350px tall (4:5)
 
+const POSITIONS = [
+  "Striker",
+  "Midfielder",
+  "Defender",
+  "Goalkeeper",
+] as const;
+
+type Position = (typeof POSITIONS)[number];
+
 function formatSurname(value: string) {
   return value.trim().toUpperCase();
 }
@@ -21,6 +30,7 @@ export default function HeritageCardGenerator() {
   const cardRef = useRef<HTMLDivElement>(null);
   const [surname, setSurname] = useState("");
   const [heritage, setHeritage] = useState("");
+  const [position, setPosition] = useState<Position | "">("");
   const [generated, setGenerated] = useState(false);
   const [copied, setCopied] = useState(false);
   const [downloading, setDownloading] = useState(false);
@@ -65,9 +75,11 @@ export default function HeritageCardGenerator() {
         cacheBust: true,
         pixelRatio: EXPORT_SCALE,
         backgroundColor: "#1A1A1A",
+        width: CARD_WIDTH,
+        height: CARD_HEIGHT,
       });
       const link = document.createElement("a");
-      link.download = `${displaySurname.toLowerCase()}-mosaic-tile.png`;
+      link.download = `${displaySurname.toLowerCase()}-true-north-rookie.png`;
       link.href = dataUrl;
       link.click();
     } catch {
@@ -92,17 +104,17 @@ export default function HeritageCardGenerator() {
         aria-hidden
       />
 
-      <div className="relative mx-auto max-w-md">
+      <div className="relative mx-auto max-w-lg">
         <header className="animate-fade-in text-center">
           <p className="mb-4 inline-block rounded-full border border-[#C9A227]/50 bg-[#1A1A1A]/5 px-4 py-1 text-xs font-semibold uppercase tracking-[0.25em] text-[#C5202C]">
             Share the Mosaic
           </p>
           <h2 className="text-balance text-3xl font-black leading-tight tracking-tight text-zinc-50 sm:text-4xl">
-            Affix Your Tile to the Canadian Mosaic
+            Mint Your True North Rookie Card
           </h2>
           <p className="mx-auto mt-5 max-w-lg text-pretty text-base leading-relaxed text-zinc-400">
-            Claim your family&apos;s place in the story. Generate a shareable
-            tile and invite others to stand behind the Maple Leaf.
+            Claim your family&apos;s place in the story. Generate a premium
+            rookie tile and invite others to stand behind the Maple Leaf.
           </p>
         </header>
 
@@ -153,12 +165,59 @@ export default function HeritageCardGenerator() {
             />
           </div>
 
+          <fieldset>
+            <legend className="block text-sm font-semibold text-zinc-300">
+              Your Primary Position{" "}
+              <span className="font-normal text-zinc-500">(optional)</span>
+            </legend>
+            <div className="mt-3 grid grid-cols-2 gap-2 sm:grid-cols-4">
+              {POSITIONS.map((option) => {
+                const isSelected = position === option;
+                return (
+                  <label
+                    key={option}
+                    className={`flex cursor-pointer items-center justify-center rounded-xl border px-3 py-2.5 text-center text-xs font-semibold uppercase tracking-wide transition-all sm:text-sm ${
+                      isSelected
+                        ? "border-[#C9A227] bg-[#C9A227]/15 text-[#C9A227]"
+                        : "border-zinc-800 bg-zinc-950 text-zinc-400 hover:border-zinc-600 hover:text-zinc-200"
+                    }`}
+                  >
+                    <input
+                      type="radio"
+                      name="primary-position"
+                      value={option}
+                      checked={isSelected}
+                      onChange={() => {
+                        setPosition(option);
+                        setGenerated(false);
+                      }}
+                      className="sr-only"
+                    />
+                    {option}
+                  </label>
+                );
+              })}
+            </div>
+            {position && (
+              <button
+                type="button"
+                onClick={() => {
+                  setPosition("");
+                  setGenerated(false);
+                }}
+                className="mt-2 text-xs text-zinc-500 transition-colors hover:text-zinc-300"
+              >
+                Clear position
+              </button>
+            )}
+          </fieldset>
+
           <button
             type="submit"
             disabled={!canGenerate}
             className="w-full rounded-full border-2 border-[#C5202C] bg-[#C5202C] px-6 py-3.5 text-sm font-bold uppercase tracking-widest text-[#FAFAFA] transition-all hover:-translate-y-0.5 hover:bg-[#a01828] hover:shadow-lg hover:shadow-[#C5202C]/25 disabled:cursor-not-allowed disabled:opacity-40 disabled:hover:translate-y-0 disabled:hover:shadow-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#C9A227]"
           >
-            Generate My Tile
+            Generate My Rookie Card
           </button>
         </form>
 
@@ -167,63 +226,101 @@ export default function HeritageCardGenerator() {
             <div className="flex justify-center">
               <div
                 ref={cardRef}
-                className="relative box-border rounded-3xl border-4 border-[#C5202C] bg-gradient-to-br from-[#1A1A1A] via-[#141414] to-[#1A1A1A] shadow-2xl shadow-[#C5202C]/20"
+                className="relative box-border overflow-hidden rounded-[18px] border-[5px] border-[#C5202C] bg-[#1A1A1A] shadow-2xl shadow-[#C5202C]/25"
                 style={{ width: CARD_WIDTH, height: CARD_HEIGHT }}
               >
+                {/* Trading-card base texture */}
                 <div
-                  className="pointer-events-none absolute left-4 top-4 flex h-11 w-11 items-center justify-center rounded-full border-2 border-[#C9A227] bg-[#C9A227]/10 text-xl"
+                  className="pointer-events-none absolute inset-0"
+                  style={{
+                    backgroundImage:
+                      "linear-gradient(135deg, rgba(201,162,39,0.08) 0%, transparent 40%, rgba(197,32,44,0.1) 100%), repeating-linear-gradient(-45deg, rgba(255,255,255,0.03) 0px, rgba(255,255,255,0.03) 1px, transparent 1px, transparent 8px)",
+                  }}
+                  aria-hidden
+                />
+
+                {/* Top foil band */}
+                <div
+                  className="relative z-10 h-[52px] border-b-2 border-[#C9A227]/60 bg-gradient-to-r from-[#C5202C] via-[#8B1520] to-[#C5202C]"
+                  aria-hidden
+                >
+                  <div className="flex h-full items-center justify-between px-4">
+                    <span className="text-[9px] font-black uppercase tracking-[0.22em] text-[#FAFAFA]/90">
+                      True North
+                    </span>
+                    <span className="rounded border border-[#C9A227]/70 bg-[#1A1A1A]/40 px-2 py-0.5 text-[8px] font-black uppercase tracking-[0.15em] text-[#C9A227]">
+                      Rookie
+                    </span>
+                    <span className="text-[9px] font-black uppercase tracking-[0.22em] text-[#FAFAFA]/90">
+                      Edition
+                    </span>
+                  </div>
+                </div>
+
+                {/* Corner medallions */}
+                <div
+                  className="pointer-events-none absolute left-3 top-[58px] z-20 flex h-10 w-10 items-center justify-center rounded-full border-2 border-[#C9A227] bg-[#141414] text-lg shadow-md"
                   aria-hidden
                 >
                   {heritageFlag}
                 </div>
                 <div
-                  className="pointer-events-none absolute bottom-4 right-4 flex h-11 w-11 items-center justify-center rounded-full border-2 border-[#C9A227] bg-[#C9A227]/10 text-lg"
+                  className="pointer-events-none absolute right-3 top-[58px] z-20 flex h-10 w-10 items-center justify-center rounded-full border-2 border-[#C9A227] bg-[#141414] text-base shadow-md"
                   aria-hidden
                 >
                   🍁
                 </div>
 
-                <div className="flex h-full flex-col justify-between p-6">
-                  <div className="rounded-2xl border border-[#C9A227]/50 p-4 text-center">
-                    <span
-                      className="animate-maple-float inline-block text-4xl"
-                      role="img"
-                      aria-label="Maple leaf"
-                    >
-                      🍁
-                    </span>
-                    <p className="mt-2 text-[8px] font-semibold uppercase leading-tight tracking-[0.18em] text-[#C9A227]">
-                      The Mosaic Pitch · Official Tile
+                {/* Inner gold frame */}
+                <div className="absolute inset-x-3 bottom-3 top-[60px] flex flex-col rounded-xl border-2 border-[#C9A227] bg-gradient-to-b from-[#141414] via-[#1A1A1A] to-[#0F0F0F] p-4 pb-2">
+                  {/* Top label */}
+                  <div className="border-b border-[#C9A227]/30 pb-3 text-center">
+                    <p className="text-[7.5px] font-bold uppercase leading-tight tracking-[0.2em] text-[#C9A227]">
+                      THE MOSAIC PITCH · OFFICIAL ROOKIE TILE
                     </p>
                   </div>
 
-                  <div className="flex flex-1 flex-col items-center justify-center px-2 text-center">
-                    <p className="text-xl font-black leading-snug tracking-wide text-[#FAFAFA]">
-                      <span className="text-[#C9A227]">{displaySurname}</span>{" "}
-                      FAMILY.
+                  {/* Center identity block */}
+                  <div className="flex flex-1 flex-col items-center justify-center px-1 py-3 text-center">
+                    <p
+                      className="max-w-full truncate text-[32px] font-black leading-none tracking-tight text-[#FAFAFA]"
+                      style={{ letterSpacing: "0.04em" }}
+                    >
+                      {displaySurname}
                     </p>
-                    <p className="mt-4 text-sm font-bold leading-relaxed text-white/90">
+                    {position && (
+                      <p className="mt-3 text-[10px] font-bold uppercase tracking-[0.28em] text-[#C5202C]">
+                        Position: {position.toUpperCase()}
+                      </p>
+                    )}
+                    <div
+                      className="mt-4 h-px w-16 bg-gradient-to-r from-transparent via-[#C9A227] to-transparent"
+                      aria-hidden
+                    />
+                  </div>
+
+                  {/* Bottom heritage statement */}
+                  <div className="border-t border-[#C9A227]/30 pt-3 text-center">
+                    <p className="text-[9.5px] font-semibold leading-[1.55] text-[#FAFAFA]/90">
                       Rooted in{" "}
-                      <span className="inline-flex items-center gap-1.5 text-[#C5202C]">
+                      <span className="inline-flex items-center gap-1 text-[#C5202C]">
                         {heritageFlag} {displayHeritage}
                       </span>
-                      .
-                      <br />
-                      Grown under the True North.
-                      <br />
-                      United by the Beautiful Game.
+                      . Grown under the True North. United by the Beautiful
+                      Game.
                     </p>
-                    <p className="mt-5 text-2xl">🇨🇦⚽</p>
-                  </div>
-
-                  <div className="flex items-center justify-center gap-3">
-                    <div className="h-px flex-1 bg-gradient-to-r from-transparent to-[#C9A227]" />
-                    <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full border-2 border-[#C9A227] bg-[#C9A227]/15 shadow-inner">
-                      <span className="text-[10px] font-black uppercase tracking-wider text-[#C9A227]">
-                        CA
-                      </span>
+                    <div
+                      className="mt-2 flex items-center justify-center gap-2"
+                      aria-hidden
+                    >
+                      <div className="h-px w-10 bg-gradient-to-r from-transparent to-[#C9A227]/60" />
+                      <div className="flex h-5 w-5 items-center justify-center rounded-full border border-[#C9A227] bg-[#C9A227]/10">
+                        <span className="text-[7px] font-black text-[#C9A227]">
+                          CA
+                        </span>
+                      </div>
+                      <div className="h-px w-10 bg-gradient-to-l from-transparent to-[#C9A227]/60" />
                     </div>
-                    <div className="h-px flex-1 bg-gradient-to-l from-transparent to-[#C9A227]" />
                   </div>
                 </div>
               </div>
@@ -247,8 +344,8 @@ export default function HeritageCardGenerator() {
                 {copied ? "Copied to clipboard!" : "Copy Share Link"}
               </button>
               <p className="max-w-sm text-center text-xs leading-relaxed text-zinc-500">
-                Download the 4:5 tile for Instagram, or copy the link to invite
-                friends and family.
+                Download the 4:5 rookie card for Instagram, or copy the link to
+                invite friends and family.
               </p>
             </div>
           </div>
