@@ -1,149 +1,86 @@
 "use client";
 
-import { useId, useState } from "react";
+import { useId, useMemo, useState } from "react";
+import { useLanguage } from "@/context/LanguageContext";
+import {
+  getDictionary,
+  type YouthClubFinderProvinceCode,
+} from "@/lib/dictionaries";
 
-type ProvinceCode =
-  | "BC"
-  | "AB"
-  | "SK"
-  | "MB"
-  | "ON"
-  | "QC"
-  | "NB"
-  | "NS"
-  | "PE"
-  | "NL"
-  | "YT"
-  | "NT"
-  | "NU";
-
-type ProvinceInfo = {
-  code: ProvinceCode;
-  name: string;
-  board: string;
-  directoryUrl: string;
-  directoryLabel: string;
+const PROVINCE_DIRECTORY_URLS: Record<YouthClubFinderProvinceCode, string> = {
+  BC: "https://bcsoccer.net/content/membership-directory",
+  AB: "https://albertasoccer.com/districts/",
+  SK: "https://www.sasksoccer.com/content/our-members",
+  MB: "https://manitobasoccer.ca/content/clubs-amp-associations",
+  ON: "https://www.ontariosoccer.net/want-to-play",
+  QC: "https://soccerquebec.org/",
+  NB: "https://soccernb.org/members/",
+  NS: "https://soccerns.ca/find-your-club/",
+  PE: "https://www.peisoccer.com/",
+  NL: "https://nlsa.ca/",
+  YT: "https://yukonsoccer.yk.ca/play/",
+  NT: "https://www.nwtsoccer.ca/",
+  NU: "https://www.nusportfederation.ca/copy-of-badminton-3",
 };
 
-const PROVINCES: ProvinceInfo[] = [
-  {
-    code: "BC",
-    name: "British Columbia",
-    board: "BC Soccer",
-    directoryUrl: "https://bcsoccer.net/content/membership-directory",
-    directoryLabel: "Browse BC Soccer membership directory",
-  },
-  {
-    code: "AB",
-    name: "Alberta",
-    board: "Alberta Soccer",
-    directoryUrl: "https://albertasoccer.com/districts/",
-    directoryLabel: "Find clubs through Alberta Soccer districts",
-  },
-  {
-    code: "SK",
-    name: "Saskatchewan",
-    board: "Saskatchewan Soccer",
-    directoryUrl: "https://www.sasksoccer.com/content/our-members",
-    directoryLabel: "View Saskatchewan member clubs",
-  },
-  {
-    code: "MB",
-    name: "Manitoba",
-    board: "Manitoba Soccer",
-    directoryUrl: "https://manitobasoccer.ca/content/clubs-amp-associations",
-    directoryLabel: "Browse Manitoba clubs & associations",
-  },
-  {
-    code: "ON",
-    name: "Ontario",
-    board: "Ontario Soccer",
-    directoryUrl: "https://www.ontariosoccer.net/want-to-play",
-    directoryLabel: "Open Ontario Soccer registration hub",
-  },
-  {
-    code: "QC",
-    name: "Quebec",
-    board: "Soccer Québec",
-    directoryUrl: "https://soccerquebec.org/",
-    directoryLabel: "Search clubs with Soccer Québec",
-  },
-  {
-    code: "NB",
-    name: "New Brunswick",
-    board: "Soccer New Brunswick",
-    directoryUrl: "https://soccernb.org/members/",
-    directoryLabel: "View Soccer NB member clubs",
-  },
-  {
-    code: "NS",
-    name: "Nova Scotia",
-    board: "Soccer Nova Scotia",
-    directoryUrl: "https://soccerns.ca/find-your-club/",
-    directoryLabel: "Find your local Nova Scotia club",
-  },
-  {
-    code: "PE",
-    name: "Prince Edward Island",
-    board: "PEI Soccer",
-    directoryUrl: "https://www.peisoccer.com/",
-    directoryLabel: "Visit PEI Soccer Association",
-  },
-  {
-    code: "NL",
-    name: "Newfoundland & Labrador",
-    board: "NLSA",
-    directoryUrl: "https://nlsa.ca/",
-    directoryLabel: "Connect with Newfoundland & Labrador Soccer",
-  },
-  {
-    code: "YT",
-    name: "Yukon",
-    board: "Yukon Soccer Association",
-    directoryUrl: "https://yukonsoccer.yk.ca/play/",
-    directoryLabel: "Explore Yukon Soccer programs",
-  },
-  {
-    code: "NT",
-    name: "Northwest Territories",
-    board: "NWT Soccer",
-    directoryUrl: "https://www.nwtsoccer.ca/",
-    directoryLabel: "Visit Northwest Territories Soccer",
-  },
-  {
-    code: "NU",
-    name: "Nunavut",
-    board: "Nunavut Soccer Association",
-    directoryUrl: "https://www.nusportfederation.ca/copy-of-badminton-3",
-    directoryLabel: "Contact Nunavut Soccer via Sport Federation",
-  },
+const GRANT_PROGRAM_URLS = {
+  kidsport: "https://kidsportcanada.ca/",
+  jumpstart: "https://jumpstart.canadiantire.ca/",
+} as const;
+
+const PROVINCE_CODES: YouthClubFinderProvinceCode[] = [
+  "BC",
+  "AB",
+  "SK",
+  "MB",
+  "ON",
+  "QC",
+  "NB",
+  "NS",
+  "PE",
+  "NL",
+  "YT",
+  "NT",
+  "NU",
 ];
 
-const GRANT_PROGRAMS = [
-  {
-    name: "KidSport Canada",
-    tagline: "So every kid can play",
-    description:
-      "KidSport provides grants of up to $500 per year to help cover registration fees for children aged 18 and under. Chapters exist in communities across every province and territory — making it one of the most accessible entry points for newcomer and low-income families.",
-    url: "https://kidsportcanada.ca/",
-    cta: "Apply for KidSport funding",
-  },
-  {
-    name: "Canadian Tire Jumpstart",
-    tagline: "Removing financial barriers to sport",
-    description:
-      "Jumpstart helps families with registration, equipment, and transportation costs so children can join organized sport. Individual child grants and community partnerships mean support reaches kids in rural, urban, and immigrant communities alike.",
-    url: "https://jumpstart.canadiantire.ca/",
-    cta: "Explore Jumpstart grants",
-  },
-] as const;
+function interpolate(template: string, values: Record<string, string>): string {
+  return Object.entries(values).reduce(
+    (result, [key, value]) => result.replace(`{{${key}}}`, value),
+    template,
+  );
+}
 
 export default function YouthClubFinder() {
   const selectId = useId();
-  const [selectedCode, setSelectedCode] = useState<ProvinceCode | "">("");
+  const { currentLanguage } = useLanguage();
+  const t = getDictionary(currentLanguage).youthClubFinder;
+  const [selectedCode, setSelectedCode] = useState<
+    YouthClubFinderProvinceCode | ""
+  >("");
+
+  const provinces = useMemo(
+    () =>
+      PROVINCE_CODES.map((code) => ({
+        code,
+        directoryUrl: PROVINCE_DIRECTORY_URLS[code],
+        ...t.provinces[code],
+      })),
+    [t],
+  );
+
+  const grantPrograms = useMemo(
+    () =>
+      (["kidsport", "jumpstart"] as const).map((key) => ({
+        key,
+        url: GRANT_PROGRAM_URLS[key],
+        ...t.grantPrograms[key],
+      })),
+    [t],
+  );
 
   const selected =
-    PROVINCES.find((province) => province.code === selectedCode) ?? null;
+    provinces.find((province) => province.code === selectedCode) ?? null;
 
   return (
     <section
@@ -162,15 +99,13 @@ export default function YouthClubFinder() {
       <div className="relative mx-auto max-w-3xl">
         <header className="animate-fade-in text-center">
           <p className="mb-4 inline-block rounded-full border border-[#C9A227]/50 bg-[#C9A227]/10 px-4 py-1 text-xs font-semibold uppercase tracking-[0.25em] text-[#C9A227]">
-            Grassroots · Youth Soccer
+            {t.badge}
           </p>
           <h2 className="text-balance text-3xl font-black tracking-tight text-zinc-50 sm:text-4xl lg:text-5xl">
-            Find a Local Club for Your Child
+            {t.title}
           </h2>
           <p className="mx-auto mt-5 max-w-xl text-pretty text-base leading-relaxed text-zinc-400 sm:text-lg">
-            Every national team player started on a community pitch. Select your
-            province or territory to connect with the official governing body and
-            register with a club near you.
+            {t.subtitle}
           </p>
         </header>
 
@@ -179,21 +114,21 @@ export default function YouthClubFinder() {
             htmlFor={selectId}
             className="block text-sm font-semibold uppercase tracking-[0.2em] text-[#C9A227]"
           >
-            Your province or territory
+            {t.provinceLabel}
           </label>
           <div className="relative mt-4">
             <select
               id={selectId}
               value={selectedCode}
               onChange={(e) =>
-                setSelectedCode(e.target.value as ProvinceCode | "")
+                setSelectedCode(e.target.value as YouthClubFinderProvinceCode | "")
               }
               className="w-full appearance-none rounded-2xl border-2 border-[#C9A227]/50 bg-zinc-900 px-5 py-4 pr-12 text-base font-medium text-zinc-50 transition-colors hover:border-[#C9A227]/80 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#C9A227] focus-visible:ring-offset-2 focus-visible:ring-offset-zinc-950"
             >
               <option value="" disabled className="text-zinc-500">
-                Choose BC, AB, SK, MB, ON, QC, NB, NS, PE, NL, YT, NT, or NU…
+                {t.selectPlaceholder}
               </option>
-              {PROVINCES.map((province) => (
+              {provinces.map((province) => (
                 <option key={province.code} value={province.code}>
                   {province.name} ({province.code})
                 </option>
@@ -208,10 +143,7 @@ export default function YouthClubFinder() {
           </div>
 
           {!selected && (
-            <p className="mt-5 text-sm text-zinc-500">
-              Select your home province or territory to see where to register
-              for youth soccer programs.
-            </p>
+            <p className="mt-5 text-sm text-zinc-500">{t.selectHint}</p>
           )}
 
           {selected && (
@@ -229,17 +161,16 @@ export default function YouthClubFinder() {
                 </span>
                 <div>
                   <p className="text-xs font-semibold uppercase tracking-[0.2em] text-[#C9A227]">
-                    You&apos;re on the right track
+                    {t.onTrackLabel}
                   </p>
                   <h3 className="mt-2 text-xl font-black text-zinc-50 sm:text-2xl">
-                    Welcome, {selected.name} families!
+                    {interpolate(t.welcomeFamilies, { name: selected.name })}
                   </h3>
                   <p className="mt-3 text-sm leading-relaxed text-zinc-400 sm:text-base">
-                    {selected.board} is the official governing body for
-                    sanctioned youth soccer in {selected.name}. Their club
-                    directory and registration resources will connect you with
-                    programs in your community — from first-time U4 kickabouts to
-                    competitive pathways.
+                    {interpolate(t.governingBodyDescription, {
+                      board: selected.board,
+                      name: selected.name,
+                    })}
                   </p>
                 </div>
               </div>
@@ -260,22 +191,20 @@ export default function YouthClubFinder() {
         <aside className="mt-10 animate-fade-in rounded-3xl border border-[#C9A227]/30 bg-zinc-950/60 p-8 sm:p-10">
           <div className="mx-auto max-w-2xl text-center">
             <p className="text-xs font-semibold uppercase tracking-[0.25em] text-[#C5202C]">
-              Financial support
+              {t.grantsBadge}
             </p>
             <h3 className="mt-3 text-2xl font-black tracking-tight text-zinc-50 sm:text-3xl">
-              Cost should never bench a child
+              {t.grantsTitle}
             </h3>
             <p className="mt-4 text-sm leading-relaxed text-zinc-400 sm:text-base">
-              Registration fees and equipment can add up — especially for
-              newcomer and low-income families. These national programs help
-              cover the costs so every child can step onto the pitch with pride.
+              {t.grantsSubtitle}
             </p>
           </div>
 
           <div className="mt-8 grid grid-cols-1 gap-6 sm:grid-cols-2">
-            {GRANT_PROGRAMS.map((program) => (
+            {grantPrograms.map((program) => (
               <article
-                key={program.name}
+                key={program.key}
                 className="flex flex-col rounded-2xl border border-zinc-800 bg-zinc-900 p-6 transition-colors hover:border-[#C9A227]/40"
               >
                 <h4 className="text-lg font-bold text-zinc-50">
