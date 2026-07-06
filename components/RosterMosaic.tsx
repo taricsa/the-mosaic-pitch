@@ -9,6 +9,40 @@ import {
 
 type Squad = "men" | "women";
 
+const AVATAR_SIZES = {
+  sm: "h-14 w-14 text-lg font-bold",
+  lg: "h-20 w-20 text-2xl font-black",
+} as const;
+
+function PlayerAvatar({
+  player,
+  size = "sm",
+}: {
+  player: Player;
+  size?: keyof typeof AVATAR_SIZES;
+}) {
+  const [imageFailed, setImageFailed] = useState(false);
+  const showImage = Boolean(player.imageUrl) && !imageFailed;
+
+  return (
+    <div
+      className={`relative flex shrink-0 items-center justify-center overflow-hidden rounded-full border-2 border-[#C9A227] bg-[#1A1A1A] text-[#C9A227] shadow-inner ${AVATAR_SIZES[size]}`}
+    >
+      {showImage ? (
+        // eslint-disable-next-line @next/next/no-img-element
+        <img
+          src={player.imageUrl}
+          alt=""
+          className="absolute inset-0 h-full w-full object-cover"
+          onError={() => setImageFailed(true)}
+        />
+      ) : (
+        player.initials
+      )}
+    </div>
+  );
+}
+
 const SQUADS: Record<Squad, { label: string; players: Player[]; subtitle: string }> = {
   men: {
     label: "🍁 Men's National Squad",
@@ -172,9 +206,7 @@ export default function RosterMosaic() {
                 {player.number}
               </span>
 
-              <div className="relative flex h-14 w-14 items-center justify-center rounded-full border-2 border-[#C9A227] bg-[#1A1A1A] text-lg font-bold text-[#C9A227] shadow-inner">
-                {player.initials}
-              </div>
+              <PlayerAvatar key={player.id} player={player} />
 
               <h3 className="relative mt-4 text-base font-bold text-[#1A1A1A] sm:text-lg">
                 {player.name}
@@ -236,9 +268,7 @@ export default function RosterMosaic() {
 
             <div className="p-8 sm:p-10">
               <div className="flex items-center gap-4">
-                <div className="flex h-20 w-20 shrink-0 items-center justify-center rounded-full border-2 border-[#C9A227] bg-[#1A1A1A] text-2xl font-black text-[#C9A227] shadow-inner">
-                  {activePlayer.initials}
-                </div>
+                <PlayerAvatar key={activePlayer.id} player={activePlayer} size="lg" />
                 <div>
                   <p className="text-xs font-semibold uppercase tracking-[0.2em] text-[#C5202C]">
                     #{activePlayer.number} · {activePlayer.position}
