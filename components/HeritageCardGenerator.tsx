@@ -2,6 +2,8 @@
 
 import { useCallback, useMemo, useRef, useState } from "react";
 import { toPng } from "html-to-image";
+import { useLanguage } from "@/context/LanguageContext";
+import { getDictionary } from "@/lib/dictionaries";
 import { getHeritageFlag } from "@/lib/heritage-flags";
 
 const SHARE_URL = "https://themosaicpitch.vercel.app";
@@ -9,14 +11,14 @@ const CARD_WIDTH = 360;
 const CARD_HEIGHT = 450;
 const EXPORT_SCALE = 3; // 360×3 = 1080px wide, 450×3 = 1350px tall (4:5)
 
-const POSITIONS = [
-  "Striker",
-  "Midfielder",
-  "Defender",
-  "Goalkeeper",
+const POSITION_KEYS = [
+  "striker",
+  "midfielder",
+  "defender",
+  "goalkeeper",
 ] as const;
 
-type Position = (typeof POSITIONS)[number];
+type Position = (typeof POSITION_KEYS)[number];
 
 function formatSurname(value: string) {
   return value.trim().toUpperCase();
@@ -26,7 +28,20 @@ function formatHeritage(value: string) {
   return value.trim();
 }
 
+function formatShareText(
+  template: string,
+  heritage: string,
+  url: string,
+): string {
+  return template
+    .replace("{{heritage}}", heritage)
+    .replace("{{url}}", url);
+}
+
 export default function HeritageCardGenerator() {
+  const { currentLanguage } = useLanguage();
+  const t = getDictionary(currentLanguage).heritageCardGenerator;
+
   const cardRef = useRef<HTMLDivElement>(null);
   const [surname, setSurname] = useState("");
   const [heritage, setHeritage] = useState("");
@@ -45,8 +60,8 @@ export default function HeritageCardGenerator() {
 
   const shareText = useMemo(() => {
     if (!canGenerate) return "";
-    return `Our family tree started in ${displayHeritage}, but we stand behind the Maple Leaf on the pitch. Generate your family's football passport on The Mosaic Pitch: ${SHARE_URL}`;
-  }, [canGenerate, displayHeritage]);
+    return formatShareText(t.shareText, displayHeritage, SHARE_URL);
+  }, [canGenerate, displayHeritage, t.shareText]);
 
   const handleGenerate = () => {
     if (!canGenerate) return;
@@ -107,14 +122,13 @@ export default function HeritageCardGenerator() {
       <div className="relative mx-auto max-w-lg">
         <header className="animate-fade-in text-center">
           <p className="mb-4 inline-block rounded-full border border-[#C9A227]/50 bg-[#1A1A1A]/5 px-4 py-1 text-xs font-semibold uppercase tracking-[0.25em] text-[#C5202C]">
-            Share the Mosaic
+            {t.badge}
           </p>
           <h2 className="text-balance text-3xl font-black leading-tight tracking-tight text-zinc-50 sm:text-4xl">
-            Mint Your True North Rookie Card
+            {t.title}
           </h2>
           <p className="mx-auto mt-5 max-w-lg text-pretty text-base leading-relaxed text-zinc-400">
-            Claim your family&apos;s place in the story. Generate a premium
-            rookie tile and invite others to stand behind the Maple Leaf.
+            {t.subtitle}
           </p>
         </header>
 
@@ -130,7 +144,7 @@ export default function HeritageCardGenerator() {
               htmlFor="heritage-surname"
               className="block text-sm font-semibold text-zinc-300"
             >
-              Your Name or Family Surname
+              {t.surnameLabel}
             </label>
             <input
               id="heritage-surname"
@@ -140,7 +154,7 @@ export default function HeritageCardGenerator() {
                 setSurname(e.target.value);
                 setGenerated(false);
               }}
-              placeholder="e.g., Nguyen, O'Brien, Singh"
+              placeholder={t.surnamePlaceholder}
               className="mt-2 w-full rounded-xl border border-zinc-800 bg-zinc-950 px-4 py-3 text-white placeholder:text-zinc-600 transition-colors focus:border-[#C5202C] focus:outline-none focus:ring-2 focus:ring-[#C5202C]/20"
             />
           </div>
@@ -150,7 +164,7 @@ export default function HeritageCardGenerator() {
               htmlFor="heritage-origins"
               className="block text-sm font-semibold text-zinc-300"
             >
-              Sovereign Heritage / Ancestral Origins
+              {t.heritageLabel}
             </label>
             <input
               id="heritage-origins"
@@ -160,22 +174,24 @@ export default function HeritageCardGenerator() {
                 setHeritage(e.target.value);
                 setGenerated(false);
               }}
-              placeholder="e.g., Italy, Nigeria, Philippines, Punjab"
+              placeholder={t.heritagePlaceholder}
               className="mt-2 w-full rounded-xl border border-zinc-800 bg-zinc-950 px-4 py-3 text-white placeholder:text-zinc-600 transition-colors focus:border-[#C5202C] focus:outline-none focus:ring-2 focus:ring-[#C5202C]/20"
             />
           </div>
 
           <fieldset>
             <legend className="block text-sm font-semibold text-zinc-300">
-              Your Primary Position{" "}
-              <span className="font-normal text-zinc-500">(optional)</span>
+              {t.positionLegend}{" "}
+              <span className="font-normal text-zinc-500">
+                {t.positionOptional}
+              </span>
             </legend>
             <div className="mt-3 grid grid-cols-2 gap-2 sm:grid-cols-4">
-              {POSITIONS.map((option) => {
-                const isSelected = position === option;
+              {POSITION_KEYS.map((key) => {
+                const isSelected = position === key;
                 return (
                   <label
-                    key={option}
+                    key={key}
                     className={`flex cursor-pointer items-center justify-center rounded-xl border px-3 py-2.5 text-center text-xs font-semibold uppercase tracking-wide transition-all sm:text-sm ${
                       isSelected
                         ? "border-[#C9A227] bg-[#C9A227]/15 text-[#C9A227]"
@@ -185,15 +201,15 @@ export default function HeritageCardGenerator() {
                     <input
                       type="radio"
                       name="primary-position"
-                      value={option}
+                      value={key}
                       checked={isSelected}
                       onChange={() => {
-                        setPosition(option);
+                        setPosition(key);
                         setGenerated(false);
                       }}
                       className="sr-only"
                     />
-                    {option}
+                    {t.positions[key]}
                   </label>
                 );
               })}
@@ -207,7 +223,7 @@ export default function HeritageCardGenerator() {
                 }}
                 className="mt-2 text-xs text-zinc-500 transition-colors hover:text-zinc-300"
               >
-                Clear position
+                {t.clearPosition}
               </button>
             )}
           </fieldset>
@@ -217,7 +233,7 @@ export default function HeritageCardGenerator() {
             disabled={!canGenerate}
             className="w-full rounded-full border-2 border-[#C5202C] bg-[#C5202C] px-6 py-3.5 text-sm font-bold uppercase tracking-widest text-[#FAFAFA] transition-all hover:-translate-y-0.5 hover:bg-[#a01828] hover:shadow-lg hover:shadow-[#C5202C]/25 disabled:cursor-not-allowed disabled:opacity-40 disabled:hover:translate-y-0 disabled:hover:shadow-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#C9A227]"
           >
-            Generate My Rookie Card
+            {t.generateButton}
           </button>
         </form>
 
@@ -229,7 +245,6 @@ export default function HeritageCardGenerator() {
                 className="relative box-border overflow-hidden rounded-[18px] border-[5px] border-[#C5202C] bg-[#1A1A1A] shadow-2xl shadow-[#C5202C]/25"
                 style={{ width: CARD_WIDTH, height: CARD_HEIGHT }}
               >
-                {/* Trading-card base texture */}
                 <div
                   className="pointer-events-none absolute inset-0"
                   style={{
@@ -239,25 +254,23 @@ export default function HeritageCardGenerator() {
                   aria-hidden
                 />
 
-                {/* Top foil band */}
                 <div
                   className="relative z-10 h-[52px] border-b-2 border-[#C9A227]/60 bg-gradient-to-r from-[#C5202C] via-[#8B1520] to-[#C5202C]"
                   aria-hidden
                 >
                   <div className="flex h-full items-center justify-between px-4">
                     <span className="text-[9px] font-black uppercase tracking-[0.22em] text-[#FAFAFA]/90">
-                      True North
+                      {t.cardTrueNorth}
                     </span>
                     <span className="rounded border border-[#C9A227]/70 bg-[#1A1A1A]/40 px-2 py-0.5 text-[8px] font-black uppercase tracking-[0.15em] text-[#C9A227]">
-                      Rookie
+                      {t.cardRookie}
                     </span>
                     <span className="text-[9px] font-black uppercase tracking-[0.22em] text-[#FAFAFA]/90">
-                      Edition
+                      {t.cardEdition}
                     </span>
                   </div>
                 </div>
 
-                {/* Corner medallions */}
                 <div
                   className="pointer-events-none absolute left-3 top-[58px] z-20 flex h-10 w-10 items-center justify-center rounded-full border-2 border-[#C9A227] bg-[#141414] text-lg shadow-md"
                   aria-hidden
@@ -271,16 +284,13 @@ export default function HeritageCardGenerator() {
                   🍁
                 </div>
 
-                {/* Inner gold frame */}
                 <div className="absolute inset-x-3 bottom-3 top-[60px] flex flex-col rounded-xl border-2 border-[#C9A227] bg-gradient-to-b from-[#141414] via-[#1A1A1A] to-[#0F0F0F] p-4 pb-2">
-                  {/* Top label */}
                   <div className="border-b border-[#C9A227]/30 pb-3 text-center">
                     <p className="text-[7.5px] font-bold uppercase leading-tight tracking-[0.2em] text-[#C9A227]">
-                      THE MOSAIC PITCH · OFFICIAL ROOKIE TILE
+                      {t.cardOfficialLabel}
                     </p>
                   </div>
 
-                  {/* Center identity block */}
                   <div className="flex flex-1 flex-col items-center justify-center px-1 py-3 text-center">
                     <p
                       className="max-w-full truncate text-[32px] font-black leading-none tracking-tight text-[#FAFAFA]"
@@ -290,7 +300,8 @@ export default function HeritageCardGenerator() {
                     </p>
                     {position && (
                       <p className="mt-3 text-[10px] font-bold uppercase tracking-[0.28em] text-[#C5202C]">
-                        Position: {position.toUpperCase()}
+                        {t.positionPrefix}{" "}
+                        {t.positions[position].toUpperCase()}
                       </p>
                     )}
                     <div
@@ -299,15 +310,13 @@ export default function HeritageCardGenerator() {
                     />
                   </div>
 
-                  {/* Bottom heritage statement */}
                   <div className="border-t border-[#C9A227]/30 pt-3 text-center">
                     <p className="text-[9.5px] font-semibold leading-[1.55] text-[#FAFAFA]/90">
-                      Rooted in{" "}
+                      {t.rootedIn}{" "}
                       <span className="inline-flex items-center gap-1 text-[#C5202C]">
                         {heritageFlag} {displayHeritage}
                       </span>
-                      . Grown under the True North. United by the Beautiful
-                      Game.
+                      {t.grownUnder}
                     </p>
                     <div
                       className="mt-2 flex items-center justify-center gap-2"
@@ -333,7 +342,7 @@ export default function HeritageCardGenerator() {
                 disabled={downloading}
                 className="inline-flex w-full items-center justify-center gap-2 rounded-full border-2 border-[#C5202C] bg-[#C5202C] px-6 py-3.5 text-sm font-bold text-white transition-all hover:-translate-y-0.5 hover:bg-[#a01828] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#C5202C] disabled:opacity-60 sm:w-auto"
               >
-                {downloading ? "Preparing download…" : "Download Tile Image"}
+                {downloading ? t.downloadPreparing : t.downloadButton}
               </button>
               <button
                 type="button"
@@ -341,11 +350,10 @@ export default function HeritageCardGenerator() {
                 className="inline-flex w-full items-center justify-center gap-2 rounded-full border-2 border-[#C9A227] bg-[#1A1A1A] px-6 py-3.5 text-sm font-bold text-[#C9A227] transition-all hover:-translate-y-0.5 hover:bg-[#C5202C] hover:border-[#C5202C] hover:text-[#FAFAFA] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#C5202C] sm:w-auto"
                 aria-live="polite"
               >
-                {copied ? "Copied to clipboard!" : "Copy Share Link"}
+                {copied ? t.copied : t.copyShare}
               </button>
               <p className="max-w-sm text-center text-xs leading-relaxed text-zinc-500">
-                Download the 4:5 rookie card for Instagram, or copy the link to
-                invite friends and family.
+                {t.shareHint}
               </p>
             </div>
           </div>
