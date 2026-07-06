@@ -5,6 +5,7 @@ import NeighborhoodCounter from "@/components/NeighborhoodCounter";
 import RosterMosaic from "@/components/RosterMosaic";
 import SiteFooter from "@/components/SiteFooter";
 import WomensWorldCupCountdown from "@/components/WomensWorldCupCountdown";
+import YouthClubFinder from "@/components/YouthClubFinder";
 
 const ACHIEVEMENTS = [
   {
@@ -162,6 +163,7 @@ export default function Home() {
           <RosterMosaic />
         </div>
         <FandomQuiz />
+        <YouthClubFinder />
         <HeritageCardGenerator />
         <MatchCalendar />
       </main>
