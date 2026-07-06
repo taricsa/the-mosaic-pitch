@@ -1,5 +1,6 @@
 import FandomQuiz from "@/components/FandomQuiz";
 import HeritageCardGenerator from "@/components/HeritageCardGenerator";
+import LanguageSwitcher from "@/components/LanguageSwitcher";
 import MatchCalendar from "@/components/MatchCalendar";
 import NeighborhoodCounter from "@/components/NeighborhoodCounter";
 import RosterMosaic from "@/components/RosterMosaic";
@@ -27,6 +28,7 @@ const ACHIEVEMENTS = [
 export default function Home() {
   return (
     <div className="flex min-h-full flex-col bg-zinc-950 text-zinc-50">
+      <LanguageSwitcher />
       {/* Hero */}
       <header className="relative overflow-hidden">
         <div

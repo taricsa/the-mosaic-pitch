@@ -1,8 +1,26 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { useLanguage } from "@/context/LanguageContext";
 
 const WWC_2027_KICKOFF = new Date("2027-06-24T17:00:00-03:00");
+
+const COPY = {
+  en: {
+    headline: "Countdown to Canada's next global stage",
+    days: "Days",
+    hours: "Hours",
+    minutes: "Minutes",
+    seconds: "Seconds",
+  },
+  fr: {
+    headline: "Compte à rebours avant la prochaine étape mondiale du Canada",
+    days: "Jours",
+    hours: "Heures",
+    minutes: "Minutes",
+    seconds: "Secondes",
+  },
+} as const;
 
 type TimeLeft = {
   days: number;
@@ -23,6 +41,8 @@ function calcTimeLeft(): TimeLeft | null {
 }
 
 export default function WomensWorldCupCountdown() {
+  const { currentLanguage } = useLanguage();
+  const copy = COPY[currentLanguage];
   const [timeLeft, setTimeLeft] = useState<TimeLeft | null>(null);
 
   useEffect(() => {
@@ -33,10 +53,10 @@ export default function WomensWorldCupCountdown() {
 
   const units = timeLeft
     ? [
-        { label: "Days", value: timeLeft.days },
-        { label: "Hours", value: timeLeft.hours },
-        { label: "Minutes", value: timeLeft.minutes },
-        { label: "Seconds", value: timeLeft.seconds },
+        { key: "days", label: copy.days, value: timeLeft.days },
+        { key: "hours", label: copy.hours, value: timeLeft.hours },
+        { key: "minutes", label: copy.minutes, value: timeLeft.minutes },
+        { key: "seconds", label: copy.seconds, value: timeLeft.seconds },
       ]
     : [];
 
@@ -53,7 +73,7 @@ export default function WomensWorldCupCountdown() {
           id="wwc-countdown-heading"
           className="mt-3 text-3xl font-black tracking-tight text-zinc-50 sm:text-4xl"
         >
-          Countdown to Canada&apos;s next global stage
+          {copy.headline}
         </h2>
         <p className="mx-auto mt-4 max-w-xl text-sm leading-relaxed text-zinc-400 sm:text-base">
           Olympic champions, world-class talent — Les Rouges return to the
@@ -65,9 +85,9 @@ export default function WomensWorldCupCountdown() {
             className="mt-10 grid grid-cols-2 gap-4 sm:grid-cols-4"
             aria-live="polite"
           >
-            {units.map(({ label, value }) => (
+            {units.map(({ key, label, value }) => (
               <div
-                key={label}
+                key={key}
                 className="rounded-2xl border border-[#C9A227]/30 bg-zinc-900/80 px-4 py-5"
               >
                 <p className="font-mono text-3xl font-black tabular-nums tracking-tight text-[#C9A227] sm:text-4xl">

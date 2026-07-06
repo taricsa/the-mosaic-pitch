@@ -1,3 +1,4 @@
+import Link from "next/link";
 import {
   CANADIAN_CLUBS,
   CPL_SCHEDULE_URL,
@@ -85,8 +86,30 @@ export default function SiteFooter() {
           </div>
         </div>
 
-        <p className="mt-12 text-center text-xs text-zinc-600">
+        <nav
+          aria-label="National team history archives"
+          className="mt-12 flex flex-col items-center justify-center gap-3 sm:flex-row sm:gap-8"
+        >
+          <Link
+            href="/history/men"
+            className="inline-flex min-h-11 items-center text-sm font-semibold text-zinc-500 transition-colors hover:text-[#C5202C] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#C5202C]"
+          >
+            Men&apos;s Historical Archive
+          </Link>
+          <Link
+            href="/history/women"
+            className="inline-flex min-h-11 items-center text-sm font-semibold text-zinc-500 transition-colors hover:text-[#C9A227] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#C9A227]"
+          >
+            Women&apos;s Historical Archive
+          </Link>
+        </nav>
+
+        <p className="mt-8 text-center text-xs text-zinc-600">
           For the love of the game. For the love of this country.
+        </p>
+
+        <p className="mt-4 text-center text-xs font-medium text-zinc-500">
+          Built with <span className="text-[#C5202C]">🍁</span> in Canada
         </p>
       </div>
     </footer>
