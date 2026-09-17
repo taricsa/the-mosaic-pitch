@@ -160,7 +160,8 @@ function DateGroupList({
                 {t.todayBadge}
               </span>
             )}
-            {isMlsPausedOn(date) && (
+            {isMlsPausedOn(date) &&
+              dayFixtures.some((fixture) => fixture.league === "MLS") && (
               <span className="rounded-full bg-zinc-800 px-2 py-0.5 text-[10px] font-medium normal-case tracking-normal text-zinc-500">
                 {t.mlsOnBreak}
               </span>
