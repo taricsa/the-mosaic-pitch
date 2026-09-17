@@ -1,9 +1,11 @@
 import assert from "node:assert/strict";
+import { spawnSync } from "node:child_process";
 import { readFile } from "node:fs/promises";
 import path from "node:path";
 import { describe, it } from "node:test";
 import { fileURLToPath } from "node:url";
 import {
+  mapApiFixture,
   mapApiFixtures,
   mapLeague,
   mapStatus,
@@ -11,6 +13,7 @@ import {
   normalizeClubName,
   pruneOldResults,
   shiftIsoDate,
+  usesPacificTime,
   windowRange,
 } from "./fixtures-mapper.mjs";
 
@@ -142,5 +145,70 @@ describe("fixtures mapper", () => {
       to: "2026-11-16",
     });
     assert.equal(shiftIsoDate("2026-09-17", -21), "2026-08-27");
+  });
+
+  it("uses venue/home location for kickoff timezone, not the away club", () => {
+    assert.equal(
+      usesPacificTime("Vancouver Whitecaps FC", "BC Place, Vancouver"),
+      true,
+    );
+    assert.equal(
+      usesPacificTime("Chicago Fire FC", "Soldier Field, Chicago"),
+      false,
+    );
+
+    const whitecapsAtChicago = mapApiFixture(
+      {
+        fixture: {
+          id: 1200999,
+          date: "2026-07-16T23:30:00+00:00",
+          venue: { name: "Soldier Field", city: "Chicago" },
+          status: { short: "NS" },
+        },
+        league: { id: 253, name: "Major League Soccer" },
+        teams: {
+          home: { name: "Chicago Fire FC" },
+          away: { name: "Vancouver Whitecaps" },
+        },
+        goals: { home: null, away: null },
+      },
+      UPDATED_AT,
+    );
+
+    assert.equal(whitecapsAtChicago.time, "19:30 ET");
+  });
+
+  it("keeps postponed matches whose original date has passed", () => {
+    const postponed = {
+      id: "cpl-rained-out",
+      date: "2026-09-10",
+      time: "19:00 ET",
+      home: "Forge FC",
+      away: "Cavalry FC",
+      league: "CPL",
+      venue: "Tim Hortons Field, Hamilton",
+      status: "postponed",
+    };
+    const merged = mergeFixtures([], [postponed], "2026-09-17");
+    assert.ok(merged.some((fixture) => fixture.id === "cpl-rained-out"));
+  });
+
+  it("exits 0 when a snapshot maps to zero fixtures", () => {
+    const root = path.resolve(DIR, "../..");
+    const result = spawnSync(
+      process.execPath,
+      [
+        "scripts/update-fixtures.mjs",
+        "--dry-run",
+        "--from-snapshot",
+        "scripts/fixtures/api-football-empty.json",
+      ],
+      { cwd: root, encoding: "utf8" },
+    );
+    assert.equal(result.status, 0);
+    assert.match(
+      `${result.stdout}${result.stderr}`,
+      /off-season\?/,
+    );
   });
 });

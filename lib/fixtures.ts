@@ -73,7 +73,7 @@ export function hasScore(fixture: Fixture): boolean {
 
 export function isUpcomingFixture(fixture: Fixture, today: string): boolean {
   if (fixture.status === "finished") return false;
-  if (fixture.status === "live") return true;
+  if (fixture.status === "live" || fixture.status === "postponed") return true;
   return fixture.date >= today;
 }
 

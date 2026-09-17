@@ -42,7 +42,7 @@ API_FOOTBALL_KEY=your_key npm run update-fixtures
 
 `--dry-run` prints JSON to stdout and does not write the file.
 
-If the API errors or maps to zero Canadian-club fixtures, the script exits without overwriting the last good file.
+If the API errors, the script exits without overwriting the last good file. If a weekly run maps **zero** Canadian-club fixtures (typical in the off-season), it logs a skip message and exits 0 so GitHub Actions stays green and existing data is left in place.
 
 ## Weekly PR
 

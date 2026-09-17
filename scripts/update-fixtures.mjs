@@ -125,7 +125,7 @@ function buildOutput(existing, mlsItems, cplItems, today) {
   ];
 
   if (incoming.length === 0) {
-    fail("mapped 0 fixtures after filtering to Canadian clubs — refusing to overwrite");
+    return null;
   }
 
   const merged = pruneOldResults(
@@ -170,6 +170,13 @@ async function main() {
   }
 
   const output = buildOutput(existing, mlsItems, cplItems, today);
+  if (!output) {
+    console.log(
+      "update-fixtures: mapped 0 fixtures in this window (off-season?). Skipping update to preserve existing data.",
+    );
+    return;
+  }
+
   const serialized = `${JSON.stringify(output, null, 2)}\n`;
 
   if (args.dryRun) {

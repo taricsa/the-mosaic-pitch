@@ -69,16 +69,14 @@ function normalizeKey(value) {
 }
 
 /**
+ * Kickoff timezone follows the match location (home club or venue),
+ * not the away club — Whitecaps at BMO Field stay on Eastern Time.
+ *
  * @param {string} home
- * @param {string} away
  * @param {string} venue
  */
-export function usesPacificTime(home, away, venue) {
-  return (
-    PACIFIC_CLUBS.has(home) ||
-    PACIFIC_CLUBS.has(away) ||
-    PACIFIC_VENUE_RE.test(venue)
-  );
+export function usesPacificTime(home, venue) {
+  return PACIFIC_CLUBS.has(home) || PACIFIC_VENUE_RE.test(venue);
 }
 
 /** @param {string | undefined} shortStatus */
@@ -182,7 +180,7 @@ export function mapApiFixture(item, updatedAt) {
   const venueName = item.fixture?.venue?.name ?? "";
   const venueCity = item.fixture?.venue?.city ?? "";
   const venue = [venueName, venueCity].filter(Boolean).join(", ") || "TBD";
-  const pacific = usesPacificTime(home, away, `${venueName} ${venueCity}`);
+  const pacific = usesPacificTime(home, `${venueName} ${venueCity}`);
   const timeZone = pacific ? "America/Vancouver" : "America/Toronto";
   const abbrev = pacific ? "PT" : "ET";
   const isoDate = item.fixture?.date;
@@ -283,7 +281,8 @@ export function mergeFixtures(incoming, existing, today) {
   for (const fixture of existing) {
     const key = matchKey(fixture.date, fixture.home, fixture.away);
     if (seenKeys.has(key) || seenIds.has(fixture.id)) continue;
-    if (fixture.status === "finished" || fixture.date < today) continue;
+    if (fixture.status === "finished") continue;
+    if (fixture.status !== "postponed" && fixture.date < today) continue;
     merged.push(fixture);
   }
 
