@@ -173,6 +173,7 @@ function matchKey(date, home, away) {
  * @param {string} updatedAt
  */
 export function mapApiFixture(item, updatedAt) {
+  if (!item) return null;
   const league = mapLeague(item.league);
   if (!league) return null;
 
@@ -256,6 +257,7 @@ export function mergeFixtures(incoming, existing, today) {
   const existingBySource = new Map();
   const existingByKey = new Map();
   for (const fixture of existing) {
+    if (!fixture) continue;
     if (typeof fixture.sourceId === "number") {
       existingBySource.set(fixture.sourceId, fixture);
     }
@@ -267,6 +269,7 @@ export function mergeFixtures(incoming, existing, today) {
   const seenIds = new Set();
 
   for (const fixture of incoming) {
+    if (!fixture) continue;
     const key = matchKey(fixture.date, fixture.home, fixture.away);
     const previous =
       (typeof fixture.sourceId === "number"
@@ -286,6 +289,7 @@ export function mergeFixtures(incoming, existing, today) {
   }
 
   for (const fixture of existing) {
+    if (!fixture) continue;
     const key = matchKey(fixture.date, fixture.home, fixture.away);
     if (seenKeys.has(key) || seenIds.has(fixture.id)) continue;
     if (fixture.status === "finished") continue;

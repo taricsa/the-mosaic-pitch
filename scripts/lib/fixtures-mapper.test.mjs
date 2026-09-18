@@ -194,6 +194,24 @@ describe("fixtures mapper", () => {
     assert.ok(merged.some((fixture) => fixture.id === "cpl-rained-out"));
   });
 
+  it("skips null API items and corrupted existing fixtures", () => {
+    assert.equal(mapApiFixture(null, UPDATED_AT), null);
+    assert.deepEqual(mapApiFixtures([null, undefined], UPDATED_AT), []);
+
+    const postponed = {
+      id: "cpl-rained-out",
+      date: "2026-09-10",
+      home: "Forge FC",
+      away: "Cavalry FC",
+      status: "postponed",
+    };
+    const merged = mergeFixtures([null], [null, postponed], "2026-09-17");
+    assert.deepEqual(
+      merged.map((fixture) => fixture.id),
+      ["cpl-rained-out"],
+    );
+  });
+
   it("exits 0 when a snapshot maps to zero fixtures", () => {
     const root = path.resolve(DIR, "../..");
     const result = spawnSync(

@@ -222,7 +222,7 @@ export default function MatchCalendar() {
           <p className="mx-auto mt-4 max-w-xl text-sm leading-relaxed text-zinc-400 sm:text-base">
             {t.subtitle}
           </p>
-          {FIXTURES_UPDATED_AT && (
+          {FIXTURES_UPDATED_AT.length >= 10 && (
             <p className="mt-2 text-xs text-zinc-600">
               {interpolate(t.lastUpdated, {
                 date: formatFixtureDateLocalized(

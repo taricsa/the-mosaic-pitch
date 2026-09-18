@@ -37,14 +37,14 @@ export const CPL_PAUSE_END = "2026-06-26";
 
 export const TORONTO_TIME_ZONE = "America/Toronto";
 
-const generatedFile = generated as FixturesFile;
+const generatedFile = (generated ?? {}) as FixturesFile;
 
 /**
  * Club fixtures sourced from the weekly API-Football update.
  * Editorial notes stay in the dictionaries, keyed by fixture id.
  */
-export const FIXTURES: Fixture[] = generatedFile.fixtures;
-export const FIXTURES_UPDATED_AT = generatedFile.updatedAt;
+export const FIXTURES: Fixture[] = generatedFile.fixtures ?? [];
+export const FIXTURES_UPDATED_AT = generatedFile.updatedAt ?? "";
 
 /** @deprecated Use FIXTURES. Kept so older imports keep working. */
 export const UPCOMING_FIXTURES = FIXTURES;

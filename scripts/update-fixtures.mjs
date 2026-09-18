@@ -55,7 +55,9 @@ async function loadExisting() {
   try {
     const raw = await readFile(OUTPUT_PATH, "utf8");
     const parsed = JSON.parse(raw);
-    return Array.isArray(parsed.fixtures) ? parsed : { updatedAt: "", fixtures: [] };
+    return parsed && Array.isArray(parsed.fixtures)
+      ? parsed
+      : { updatedAt: "", fixtures: [] };
   } catch (error) {
     if (error && error.code === "ENOENT") {
       return { updatedAt: "", fixtures: [] };
@@ -67,8 +69,8 @@ async function loadExisting() {
 async function loadSnapshot(snapshotPath) {
   const resolved = path.resolve(ROOT, snapshotPath);
   const parsed = JSON.parse(await readFile(resolved, "utf8"));
-  const mls = parsed.mls ?? parsed.MLS ?? [];
-  const cpl = parsed.cpl ?? parsed.CPL ?? [];
+  const mls = parsed?.mls ?? parsed?.MLS ?? [];
+  const cpl = parsed?.cpl ?? parsed?.CPL ?? [];
   if (!Array.isArray(mls) || !Array.isArray(cpl)) {
     fail("snapshot must contain mls and cpl arrays");
   }
@@ -92,10 +94,10 @@ async function apiGet(apiKey, pathname, searchParams) {
   }
 
   const body = await response.json();
-  if (body.errors && Object.keys(body.errors).length > 0) {
+  if (body?.errors && Object.keys(body.errors).length > 0) {
     fail(`API-Football error: ${JSON.stringify(body.errors)}`);
   }
-  if (!Array.isArray(body.response)) {
+  if (!Array.isArray(body?.response)) {
     fail(`API-Football returned no response array for ${url.pathname}`);
   }
   return body.response;
