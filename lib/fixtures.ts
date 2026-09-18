@@ -50,12 +50,16 @@ export const FIXTURES_UPDATED_AT = generatedFile.updatedAt;
 export const UPCOMING_FIXTURES = FIXTURES;
 
 export function todayInToronto(now = new Date()): string {
-  return new Intl.DateTimeFormat("en-CA", {
+  const parts = new Intl.DateTimeFormat("en-US", {
     timeZone: TORONTO_TIME_ZONE,
     year: "numeric",
     month: "2-digit",
     day: "2-digit",
-  }).format(now);
+  }).formatToParts(now);
+  const year = parts.find((part) => part.type === "year")?.value;
+  const month = parts.find((part) => part.type === "month")?.value;
+  const day = parts.find((part) => part.type === "day")?.value;
+  return `${year}-${month}-${day}`;
 }
 
 export function addDays(isoDate: string, days: number): string {

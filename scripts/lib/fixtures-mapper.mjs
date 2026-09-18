@@ -126,16 +126,23 @@ export function mapLeague(league) {
 }
 
 /**
+ * Calendar date in a zone as YYYY-MM-DD.
+ * Built from formatToParts so locale string order cannot change the result.
+ *
  * @param {string} isoDate
  * @param {string} timeZone
  */
 export function calendarDateInZone(isoDate, timeZone) {
-  return new Intl.DateTimeFormat("en-CA", {
+  const parts = new Intl.DateTimeFormat("en-US", {
     timeZone,
     year: "numeric",
     month: "2-digit",
     day: "2-digit",
-  }).format(new Date(isoDate));
+  }).formatToParts(new Date(isoDate));
+  const year = parts.find((part) => part.type === "year")?.value;
+  const month = parts.find((part) => part.type === "month")?.value;
+  const day = parts.find((part) => part.type === "day")?.value;
+  return `${year}-${month}-${day}`;
 }
 
 /**

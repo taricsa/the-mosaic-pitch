@@ -5,6 +5,7 @@ import path from "node:path";
 import { describe, it } from "node:test";
 import { fileURLToPath } from "node:url";
 import {
+  calendarDateInZone,
   mapApiFixture,
   mapApiFixtures,
   mapLeague,
@@ -209,6 +210,21 @@ describe("fixtures mapper", () => {
     assert.match(
       `${result.stdout}${result.stderr}`,
       /off-season\?/,
+    );
+  });
+
+  it("builds YYYY-MM-DD from formatToParts, independent of locale string order", () => {
+    assert.equal(
+      calendarDateInZone("2026-09-17T04:00:00.000Z", "America/Toronto"),
+      "2026-09-17",
+    );
+    assert.equal(
+      calendarDateInZone("2026-09-17T03:59:00.000Z", "America/Toronto"),
+      "2026-09-16",
+    );
+    assert.match(
+      calendarDateInZone("2026-07-16T23:30:00+00:00", "America/Toronto"),
+      /^\d{4}-\d{2}-\d{2}$/,
     );
   });
 });
