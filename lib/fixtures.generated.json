@@ -1,0 +1,82 @@
+{
+  "updatedAt": "2026-09-17T00:00:00.000Z",
+  "fixtures": [
+    {
+      "id": "cpl-july-4",
+      "date": "2026-07-04",
+      "time": "19:00 ET",
+      "home": "Atlético Ottawa",
+      "away": "Cavalry FC",
+      "league": "CPL",
+      "venue": "TD Place, Ottawa",
+      "status": "finished",
+      "updatedAt": "2026-09-17T00:00:00.000Z"
+    },
+    {
+      "id": "mls-july-16-mtl",
+      "date": "2026-07-16",
+      "time": "19:30 ET",
+      "home": "CF Montréal",
+      "away": "Toronto FC",
+      "league": "MLS",
+      "venue": "Stade Saputo, Montréal",
+      "status": "finished",
+      "updatedAt": "2026-09-17T00:00:00.000Z"
+    },
+    {
+      "id": "mls-july-16-van",
+      "date": "2026-07-16",
+      "time": "17:30 PT",
+      "home": "Chicago Fire FC",
+      "away": "Vancouver Whitecaps FC",
+      "league": "MLS",
+      "venue": "Soldier Field, Chicago",
+      "status": "finished",
+      "updatedAt": "2026-09-17T00:00:00.000Z"
+    },
+    {
+      "id": "mls-july-25-mtl",
+      "date": "2026-07-25",
+      "time": "19:30 ET",
+      "home": "CF Montréal",
+      "away": "Inter Miami CF",
+      "league": "MLS",
+      "venue": "Stade Saputo, Montréal",
+      "status": "finished",
+      "updatedAt": "2026-09-17T00:00:00.000Z"
+    },
+    {
+      "id": "mls-july-25-van",
+      "date": "2026-07-25",
+      "time": "17:30 PT",
+      "home": "Minnesota United FC",
+      "away": "Vancouver Whitecaps FC",
+      "league": "MLS",
+      "venue": "Allianz Field, Saint Paul",
+      "status": "finished",
+      "updatedAt": "2026-09-17T00:00:00.000Z"
+    },
+    {
+      "id": "mls-oct-10-tor",
+      "date": "2026-10-10",
+      "time": "19:30 ET",
+      "home": "Toronto FC",
+      "away": "CF Montréal",
+      "league": "MLS",
+      "venue": "BMO Field, Toronto",
+      "status": "scheduled",
+      "updatedAt": "2026-09-17T00:00:00.000Z"
+    },
+    {
+      "id": "mls-nov-7-van",
+      "date": "2026-11-07",
+      "time": "13:00 ET",
+      "home": "CF Montréal",
+      "away": "Vancouver Whitecaps FC",
+      "league": "MLS",
+      "venue": "Stade Saputo, Montréal",
+      "status": "scheduled",
+      "updatedAt": "2026-09-17T00:00:00.000Z"
+    }
+  ]
+}
