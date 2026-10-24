@@ -198,8 +198,9 @@ export function mapApiFixture(item, updatedAt) {
   const sourceId = item.fixture?.id;
   const date = calendarDateInZone(isoDate, timeZone);
 
+  const leagueKey = item.league?.id ?? league;
   const fixture = {
-    id: sourceId ? `api-${item.league.id}-${sourceId}` : `api-${league}-${date}-${home}-${away}`,
+    id: sourceId ? `api-${leagueKey}-${sourceId}` : `api-${league}-${date}-${home}-${away}`,
     date,
     time: formatKickoff(isoDate, timeZone, abbrev),
     home,

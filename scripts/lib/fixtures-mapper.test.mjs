@@ -43,6 +43,31 @@ describe("fixtures mapper", () => {
     assert.equal(mapLeague({ id: 253, name: "Major League Soccer" }), "MLS");
     assert.equal(mapLeague({ id: 479, name: "Canadian Premier League" }), "CPL");
     assert.equal(mapLeague({ id: 39, name: "Premier League" }), null);
+    assert.equal(mapLeague({ name: "Major League Soccer" }), "MLS");
+    assert.equal(mapLeague({ name: "Canadian Premier League" }), "CPL");
+  });
+
+  it("falls back to mapped league when API league id is missing", () => {
+    const mapped = mapApiFixture(
+      {
+        fixture: {
+          id: 1200101,
+          date: "2026-07-16T23:30:00+00:00",
+          venue: { name: "BMO Field", city: "Toronto" },
+          status: { short: "NS" },
+        },
+        league: { name: "Major League Soccer" },
+        teams: {
+          home: { name: "Toronto FC" },
+          away: { name: "Chicago Fire FC" },
+        },
+        goals: { home: null, away: null },
+      },
+      UPDATED_AT,
+    );
+
+    assert.equal(mapped?.id, "api-MLS-1200101");
+    assert.equal(mapped?.league, "MLS");
   });
 
   it("maps a snapshot payload onto site fixtures", async () => {
