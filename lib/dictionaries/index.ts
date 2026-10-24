@@ -110,18 +110,19 @@ export type MatchCalendarDictionary = {
   filterAll: string;
   mlsPausedUntil: string;
   emptyState: string;
+  emptyResults: string;
+  upcomingTitle: string;
+  recentResultsTitle: string;
   todayBadge: string;
   mlsOnBreak: string;
+  liveBadge: string;
+  postponedBadge: string;
   versus: string;
+  scoreSeparator: string;
+  lastUpdated: string;
   cplScheduleLink: string;
   mlsScheduleLink: string;
-  fixtureNotes: {
-    "cpl-july-4": string;
-    "mls-july-16-mtl": string;
-    "mls-july-16-van": string;
-    "mls-oct-10-tor": string;
-    "mls-nov-7-van": string;
-  };
+  fixtureNotes: Record<string, string>;
 };
 
 export type LanguageSwitcherDictionary = {
@@ -474,7 +475,7 @@ export const en: Dictionary = {
     badge: "Canadian Club Football",
     title: "Match Calendar",
     subtitle:
-      "Verified upcoming fixtures for Canadian CPL and MLS clubs — adjusted for the 2026 World Cup schedule breaks.",
+      "Upcoming fixtures and recent results for Canadian CPL and MLS clubs — refreshed weekly from league data.",
     worldCupBannerTitle:
       "🏆 World Cup in progress · {{start}} – {{end}}",
     worldCupMlsBody:
@@ -486,10 +487,18 @@ export const en: Dictionary = {
     mlsPausedUntil:
       "No MLS matches until {{date}} — the league is on World Cup break.",
     emptyState:
-      "No verified fixtures in this filter right now. Check the official league schedules below for the full calendar.",
+      "No upcoming fixtures in this filter right now. Check the official league schedules below for the full calendar.",
+    emptyResults:
+      "No recent results in this filter yet. Scores appear after the weekly data refresh.",
+    upcomingTitle: "Upcoming",
+    recentResultsTitle: "Recent results",
     todayBadge: "Today",
     mlsOnBreak: "MLS on break",
+    liveBadge: "Live",
+    postponedBadge: "Postponed",
     versus: "vs",
+    scoreSeparator: "–",
+    lastUpdated: "Fixture data updated {{date}}.",
     cplScheduleLink: "Full CPL Schedule →",
     mlsScheduleLink: "Full MLS Schedule →",
     fixtureNotes: {
@@ -910,7 +919,7 @@ export const fr: Dictionary = {
     badge: "Soccer club canadien",
     title: "Calendrier des matchs",
     subtitle:
-      "Matchs à venir vérifiés pour les clubs canadiens de la CPL et de la MLS — ajustés pour les pauses du calendrier de la Coupe du monde 2026.",
+      "Matchs à venir et résultats récents pour les clubs canadiens de la CPL et de la MLS — mis à jour chaque semaine.",
     worldCupBannerTitle:
       "🏆 Coupe du monde en cours · {{start}} – {{end}}",
     worldCupMlsBody:
@@ -922,10 +931,18 @@ export const fr: Dictionary = {
     mlsPausedUntil:
       "Aucun match de la MLS avant le {{date}} — la ligue est en pause pour la Coupe du monde.",
     emptyState:
-      "Aucun match vérifié dans ce filtre pour le moment. Consultez les calendriers officiels des ligues ci-dessous pour le calendrier complet.",
+      "Aucun match à venir dans ce filtre pour le moment. Consultez les calendriers officiels des ligues ci-dessous pour le calendrier complet.",
+    emptyResults:
+      "Aucun résultat récent dans ce filtre pour le moment. Les scores apparaissent après la mise à jour hebdomadaire.",
+    upcomingTitle: "À venir",
+    recentResultsTitle: "Résultats récents",
     todayBadge: "Aujourd'hui",
     mlsOnBreak: "MLS en pause",
+    liveBadge: "En direct",
+    postponedBadge: "Reporté",
     versus: "c.",
+    scoreSeparator: "–",
+    lastUpdated: "Données des matchs mises à jour le {{date}}.",
     cplScheduleLink: "Calendrier complet de la CPL →",
     mlsScheduleLink: "Calendrier complet de la MLS →",
     fixtureNotes: {

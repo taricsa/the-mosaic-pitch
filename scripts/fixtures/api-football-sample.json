@@ -1,0 +1,90 @@
+{
+  "mls": [
+    {
+      "fixture": {
+        "id": 1200101,
+        "date": "2026-09-10T23:30:00+00:00",
+        "venue": { "name": "Stade Saputo", "city": "Montreal" },
+        "status": { "long": "Match Finished", "short": "FT" }
+      },
+      "league": { "id": 253, "name": "Major League Soccer", "season": 2026 },
+      "teams": {
+        "home": { "id": 1614, "name": "CF Montreal" },
+        "away": { "id": 1608, "name": "Toronto FC" }
+      },
+      "goals": { "home": 2, "away": 1 }
+    },
+    {
+      "fixture": {
+        "id": 1200102,
+        "date": "2026-09-12T00:30:00+00:00",
+        "venue": { "name": "Soldier Field", "city": "Chicago" },
+        "status": { "long": "Match Finished", "short": "FT" }
+      },
+      "league": { "id": 253, "name": "Major League Soccer", "season": 2026 },
+      "teams": {
+        "home": { "id": 1607, "name": "Chicago Fire FC" },
+        "away": { "id": 14002, "name": "New York City FC" }
+      },
+      "goals": { "home": 1, "away": 1 }
+    },
+    {
+      "fixture": {
+        "id": 1200103,
+        "date": "2026-10-10T23:30:00+00:00",
+        "venue": { "name": "BMO Field", "city": "Toronto" },
+        "status": { "long": "Not Started", "short": "NS" }
+      },
+      "league": { "id": 253, "name": "Major League Soccer", "season": 2026 },
+      "teams": {
+        "home": { "id": 1608, "name": "Toronto FC" },
+        "away": { "id": 1614, "name": "CF Montreal" }
+      },
+      "goals": { "home": null, "away": null }
+    },
+    {
+      "fixture": {
+        "id": 1200104,
+        "date": "2026-09-13T02:30:00+00:00",
+        "venue": { "name": "BC Place", "city": "Vancouver" },
+        "status": { "long": "Second Half", "short": "2H" }
+      },
+      "league": { "id": 253, "name": "Major League Soccer", "season": 2026 },
+      "teams": {
+        "home": { "id": 1613, "name": "Vancouver Whitecaps" },
+        "away": { "id": 1617, "name": "Seattle Sounders" }
+      },
+      "goals": { "home": 1, "away": 0 }
+    }
+  ],
+  "cpl": [
+    {
+      "fixture": {
+        "id": 880001,
+        "date": "2026-07-04T23:00:00+00:00",
+        "venue": { "name": "TD Place", "city": "Ottawa" },
+        "status": { "long": "Match Finished", "short": "FT" }
+      },
+      "league": { "id": 479, "name": "Canadian Premier League", "season": 2026 },
+      "teams": {
+        "home": { "id": 3675, "name": "Atletico Ottawa" },
+        "away": { "id": 3674, "name": "Cavalry FC" }
+      },
+      "goals": { "home": 3, "away": 1 }
+    },
+    {
+      "fixture": {
+        "id": 880002,
+        "date": "2026-09-20T18:00:00+00:00",
+        "venue": { "name": "Tim Hortons Field", "city": "Hamilton" },
+        "status": { "long": "Not Started", "short": "NS" }
+      },
+      "league": { "id": 479, "name": "Canadian Premier League", "season": 2026 },
+      "teams": {
+        "home": { "id": 3676, "name": "Forge FC" },
+        "away": { "id": 3674, "name": "Cavalry" }
+      },
+      "goals": { "home": null, "away": null }
+    }
+  ]
+}

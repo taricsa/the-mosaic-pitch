@@ -1,0 +1,68 @@
+[
+  {
+    "id": "api-253-1200101",
+    "date": "2026-09-10",
+    "time": "19:30 ET",
+    "home": "CF Montréal",
+    "away": "Toronto FC",
+    "league": "MLS",
+    "venue": "Stade Saputo, Montreal",
+    "status": "finished",
+    "updatedAt": "2026-09-17T12:00:00.000Z",
+    "sourceId": 1200101,
+    "homeScore": 2,
+    "awayScore": 1
+  },
+  {
+    "id": "api-253-1200103",
+    "date": "2026-10-10",
+    "time": "19:30 ET",
+    "home": "Toronto FC",
+    "away": "CF Montréal",
+    "league": "MLS",
+    "venue": "BMO Field, Toronto",
+    "status": "scheduled",
+    "updatedAt": "2026-09-17T12:00:00.000Z",
+    "sourceId": 1200103
+  },
+  {
+    "id": "api-253-1200104",
+    "date": "2026-09-12",
+    "time": "19:30 PT",
+    "home": "Vancouver Whitecaps FC",
+    "away": "Seattle Sounders",
+    "league": "MLS",
+    "venue": "BC Place, Vancouver",
+    "status": "live",
+    "updatedAt": "2026-09-17T12:00:00.000Z",
+    "sourceId": 1200104,
+    "homeScore": 1,
+    "awayScore": 0
+  },
+  {
+    "id": "api-479-880001",
+    "date": "2026-07-04",
+    "time": "19:00 ET",
+    "home": "Atlético Ottawa",
+    "away": "Cavalry FC",
+    "league": "CPL",
+    "venue": "TD Place, Ottawa",
+    "status": "finished",
+    "updatedAt": "2026-09-17T12:00:00.000Z",
+    "sourceId": 880001,
+    "homeScore": 3,
+    "awayScore": 1
+  },
+  {
+    "id": "api-479-880002",
+    "date": "2026-09-20",
+    "time": "14:00 ET",
+    "home": "Forge FC",
+    "away": "Cavalry FC",
+    "league": "CPL",
+    "venue": "Tim Hortons Field, Hamilton",
+    "status": "scheduled",
+    "updatedAt": "2026-09-17T12:00:00.000Z",
+    "sourceId": 880002
+  }
+]

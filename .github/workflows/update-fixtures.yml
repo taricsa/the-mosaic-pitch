@@ -1,0 +1,42 @@
+name: Update fixtures
+
+on:
+  schedule:
+    - cron: "0 14 * * 1"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+
+      - name: Fetch latest fixtures
+        env:
+          API_FOOTBALL_KEY: ${{ secrets.API_FOOTBALL_KEY }}
+        run: npm run update-fixtures
+
+      - name: Open review PR
+        uses: peter-evans/create-pull-request@v7
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          commit-message: "chore: weekly fixture and score update"
+          branch: chore/weekly-fixtures
+          title: "chore: weekly fixture and score update"
+          body: |
+            Automated weekly refresh of CPL and MLS Canadian-club fixtures from API-Football.
+
+            Review dates and scores, then merge to deploy on Vercel.
+          add-paths: |
+            lib/fixtures.generated.json
+          delete-branch: true
