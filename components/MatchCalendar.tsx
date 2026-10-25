@@ -143,11 +143,13 @@ function DateGroupList({
   today,
   locale,
   t,
+  filter,
 }: {
   grouped: [string, Fixture[]][];
   today: string;
   locale: Locale;
   t: MatchCalendarDictionary;
+  filter: LeagueFilter;
 }) {
   return (
     <div className="space-y-8">
@@ -160,8 +162,7 @@ function DateGroupList({
                 {t.todayBadge}
               </span>
             )}
-            {isMlsPausedOn(date) &&
-              dayFixtures.some((fixture) => fixture.league === "MLS") && (
+            {isMlsPausedOn(date) && filter !== "CPL" && (
               <span className="rounded-full bg-zinc-800 px-2 py-0.5 text-[10px] font-medium normal-case tracking-normal text-zinc-500">
                 {t.mlsOnBreak}
               </span>
@@ -320,6 +321,7 @@ export default function MatchCalendar() {
               today={today}
               locale={currentLanguage}
               t={t}
+              filter={filter}
             />
           )}
         </section>
@@ -337,6 +339,7 @@ export default function MatchCalendar() {
               today={today}
               locale={currentLanguage}
               t={t}
+              filter={filter}
             />
           </section>
         )}
